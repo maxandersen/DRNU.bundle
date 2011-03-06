@@ -6,6 +6,14 @@ Provides access to the content available from dr.dk/nu.
 Most content is freely available, but some of the content might not be
 viewable outside of Denmark.
 
+Installation
+============
+
+cd ~/Library/Application Support/Plex Media Server/Plug-ins/
+git clone git://github.com/maxandersen/DRNU.bundle.git
+
+Now Plex should see the DRNU plugin.
+
 Changes
 =======
 Based on plugin posted at
