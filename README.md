@@ -9,7 +9,7 @@ viewable outside of Denmark.
 Changes
 =======
 Based on plugin posted at
-http://forums.plexapp.com/index.php/topic/6283-dr-and-tv2-plugins-denmark/page__view__findpost__p__150323
+(http://forums.plexapp.com/index.php/topic/6283-dr-and-tv2-plugins-denmark/page__view__findpost__p__150323)
 by Plex forum user MTI.
 
 07/03/2011: 
