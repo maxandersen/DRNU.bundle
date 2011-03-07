@@ -92,9 +92,12 @@ def ProgramMenu(sender,id):
 	for item in JSONObject:
 		key=APIURL % "videos/" + str(item["id"])
 		thumb=APIURL % "videos/" + str(item["id"]) + "/images/600x600.jpg"
-		title=item["title"] + ": " + item["formattedBroadcastTime"]
-		subtitle=item["description"]
-		dir.Append(Function(VideoItem(GetVideos, title=title,subtitle=subtitle, thumb=thumb), id=item["videoResourceUrl"]))
+		title=item["title"]
+		if item["premiere"]:
+			title = title + " *PREMIERE* "
+		summary=item["description"]
+		subtitle=item["broadcastChannel"] + ": " + item["formattedBroadcastTime"] + " ["+ item["duration"] + "]"
+		dir.Append(Function(VideoItem(GetVideos, title=title,summary=summary, subtitle=subtitle, thumb=thumb), id=item["videoResourceUrl"]))
 	return dir
 
 def GetVideos(sender,id):
