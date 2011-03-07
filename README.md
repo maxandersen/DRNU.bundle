@@ -9,8 +9,13 @@ viewable outside of Denmark.
 Installation
 ============
 
+With Git (Recommended):
 cd ~/Library/Application Support/Plex Media Server/Plug-ins/
 git clone git://github.com/maxandersen/DRNU.bundle.git
+
+With Zip (Only if Git scares you): 
+Download https://github.com/maxandersen/DRNU.bundle/zipball/master
+Unzip content into ~/Library/Application Support/Plex Media Server/Plug-ins/
 
 Now Plex should see the DRNU plugin.
 
