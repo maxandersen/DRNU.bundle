@@ -29,3 +29,5 @@ by Plex forum user MTI.
 	    Added support for Newest, Most Viewed & Spotlight.
 	    Started making better usage of summary/subtitles.
 
+14/06/2011
+		Added support for live TV and radio

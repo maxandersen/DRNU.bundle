@@ -1,12 +1,18 @@
 ####################################################################################################
 
 VIDEO_PREFIX = "/video/drnu"
+MUSIC_PREFIX = "/music/drnu"
 
 APIURL = "http://www.dr.dk/NU/api/%s"
 
 NAME  = "DR NU"
-ART   = 'art-default.png'
-ICON  = 'DR.png'
+ART   = 'art-default.jpg'
+ICON  = 'DR_icon-default.png'
+ICON_DR1 = "DR1_icon-default.png"
+ICON_DR2 = "DR2_icon-default.png"
+ICON_DRK = "DRK_icon-default.png"
+ICON_DRR = "DR_RAMASJANG_icon-default.png"
+ICON_DRU = "DR_UPDATE_icon-default.png"
 
 HTTP.CacheTime = 3600
 
@@ -14,6 +20,7 @@ HTTP.CacheTime = 3600
 
 def Start():
 	Plugin.AddPrefixHandler(VIDEO_PREFIX, VideoMainMenu, NAME, ICON, ART)
+	Plugin.AddPrefixHandler(MUSIC_PREFIX, VideoMainMenu, NAME, ICON, ART)
 	Plugin.AddViewGroup("InfoList", viewMode="InfoList", mediaType="items")
 	Plugin.AddViewGroup("List", viewMode="List", mediaType="items")
 	MediaContainer.art = R(ART)
@@ -65,11 +72,11 @@ def ProgramMenu(sender,id, title):
 def LiveTVMenu(sender):
 	drRTMP = "rtmp://rtmplive.dr.dk/live"
 	dir = MediaContainer(title1="DR NU - Live TV", title2="Live TV")	
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr01astream3", width=830, height=467, live=True, title="DR1", summary="DR1 Live", thumb=R(ICON) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr02astream3", width=830, height=467, live=True, title="DR2", summary="DR2 Live", thumb=R(ICON) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr03astream3", width=830, height=467, live=True, title="DR Update", summary="DR1 Update", thumb=R(ICON) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr04astream3", width=830, height=467, live=True, title="DR K", summary="DR1 K Live", thumb=R(ICON) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr05astream3", width=830, height=467, live=True, title="DR Ramsjang", summary="DR1 Ramasjang Live", thumb=R(ICON) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr01astream3", width=830, height=467, live=True, title="DR1", summary="DR1 Live", thumb=R(ICON_DR1) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr02astream3", width=830, height=467, live=True, title="DR2", summary="DR2 Live", thumb=R(ICON_DR2) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr03astream3", width=830, height=467, live=True, title="DR Update", summary="DR1 Update", thumb=R(ICON_DRU) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr04astream3", width=830, height=467, live=True, title="DR K", summary="DR1 K Live", thumb=R(ICON_DRK) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr05astream3", width=830, height=467, live=True, title="DR Ramsjang", summary="DR1 Ramasjang Live", thumb=R(ICON_DRR) ) )
 	return dir
 
 
@@ -84,7 +91,7 @@ def LiveRadioMenu(sender):
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel29_HQ", width=0, height=0, live=True, title="DR P6 Beat", summary="DR P6 Beat Live", thumb=R(ICON)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel21_HQ", width=0, height=0, live=True, title="DR P7 Mix", summary="DR P7 Mix Live", thumb=R(ICON)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel24_HQ", width=0, height=0, live=True, title="DR Ramasjang Radio", summary="DR Ramasjang Radio Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel21_HQ", width=0, height=0, live=True, title="DR Hit", summary="DR Hit Live", thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel26_HQ", width=0, height=0, live=True, title="DR R&B", summary="DR R&B Live", thumb=R(ICON)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel18_HQ", width=0, height=0, live=True, title="DR Boogieradio", summary="DR Boogieradio Live", thumb=R(ICON)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel27_HQ", width=0, height=0, live=True, title="DR Rock", summary="DR Rock Live", thumb=R(ICON)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel10_HQ", width=0, height=0, live=True, title="DR Dansktop", summary="DR Dansktop Live", thumb=R(ICON)))
