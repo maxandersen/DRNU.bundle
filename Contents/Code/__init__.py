@@ -1,9 +1,11 @@
+import time
 ####################################################################################################
 
 VIDEO_PREFIX = "/video/drnu"
 MUSIC_PREFIX = "/music/drnu"
 
 APIURL = "http://www.dr.dk/NU/api/%s"
+RADIO_NOWNEXT_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/programInfo.drxml?channelId=%s"
 
 NAME  = "DR NU"
 ART   = 'art-default.jpg'
@@ -13,6 +15,13 @@ ICON_DR2 = "DR2_icon-default.png"
 ICON_DRK = "DRK_icon-default.png"
 ICON_DRR = "DR_RAMASJANG_icon-default.png"
 ICON_DRU = "DR_UPDATE_icon-default.png"
+
+EPG_TV = { "DR1":"http://www.dr.dk/Tjenester/epglive/epg.DR1.drxml",
+		"DR2": "http://www.dr.dk/Tjenester/epglive/epg.DR2.drxml",
+		"DRU": "http://www.dr.dk/Tjenester/epglive/epg.DRUpdate.drxml",
+		"RAM": "http://www.dr.dk/Tjenester/epglive/epg.DRRamasjang.drxml",
+		"DRK": "http://www.dr.dk/Tjenester/epglive/epg.DRK.drxml"
+		}
 
 HTTP.CacheTime = 3600
 
@@ -72,48 +81,48 @@ def ProgramMenu(sender,id, title):
 def LiveTVMenu(sender):
 	drRTMP = "rtmp://rtmplive.dr.dk/live"
 	dir = MediaContainer(title1="DR NU - Live TV", title2="Live TV")	
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr01astream3", width=830, height=467, live=True, title="DR1", summary="DR1 Live", thumb=R(ICON_DR1) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr02astream3", width=830, height=467, live=True, title="DR2", summary="DR2 Live", thumb=R(ICON_DR2) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr03astream3", width=830, height=467, live=True, title="DR Update", summary="DR1 Update", thumb=R(ICON_DRU) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr04astream3", width=830, height=467, live=True, title="DR K", summary="DR1 K Live", thumb=R(ICON_DRK) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr05astream3", width=830, height=467, live=True, title="DR Ramsjang", summary="DR1 Ramasjang Live", thumb=R(ICON_DRR) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr01astream3", width=830, height=467, live=True, title="DR1", summary=getTVLiveMetadata("DR1"), thumb=R(ICON_DR1) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr02astream3", width=830, height=467, live=True, title="DR2", summary=getTVLiveMetadata("DR2"), thumb=R(ICON_DR2) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr03astream3", width=830, height=467, live=True, title="DR Update", summary=getTVLiveMetadata("DRU"), thumb=R(ICON_DRU) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr04astream3", width=830, height=467, live=True, title="DR K", summary=getTVLiveMetadata("DRK"), thumb=R(ICON_DRK) ) )
+	dir.Append(RTMPVideoItem(drRTMP, clip="livedr05astream3", width=830, height=467, live=True, title="DR Ramsjang", summary=getTVLiveMetadata("RAM"), thumb=R(ICON_DRR) ) )
 	return dir
 
 
 def LiveRadioMenu(sender):
 	drRTMP = "rtmp://live.gss.dr.dk/live/"
 	dir=MediaContainer(title1="DR NU - Live Radio", title2="Live Radio")
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel3_HQ", width=0, height=0, live=True, title="P1", summary="P1 Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel4_HQ", width=0, height=0, live=True, title="P2", summary="P2 Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel15_HQ", width=0, height=0, live=True, title="P3", summary="P3 Live", thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel3_HQ", width=0, height=0, live=True, title="P1", summary=getRadioMetadata('P1'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel4_HQ", width=0, height=0, live=True, title="P2", summary=getRadioMetadata('P2'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel15_HQ", width=0, height=0, live=True, title="P3", summary=getRadioMetadata('P3'), thumb=R(ICON)))
 	dir.Append(Function(DirectoryItem(LiveRadioP4Menu,"P4",subtitle="P4", summary="",thumb=R(ICON),art=R(ART))))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel25_HQ", width=0, height=0, live=True, title="DR P5", summary="DR P5 Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel29_HQ", width=0, height=0, live=True, title="DR P6 Beat", summary="DR P6 Beat Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel21_HQ", width=0, height=0, live=True, title="DR P7 Mix", summary="DR P7 Mix Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel24_HQ", width=0, height=0, live=True, title="DR Ramasjang Radio", summary="DR Ramasjang Radio Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel26_HQ", width=0, height=0, live=True, title="DR R&B", summary="DR R&B Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel18_HQ", width=0, height=0, live=True, title="DR Boogieradio", summary="DR Boogieradio Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel27_HQ", width=0, height=0, live=True, title="DR Rock", summary="DR Rock Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel10_HQ", width=0, height=0, live=True, title="DR Dansktop", summary="DR Dansktop Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel19_HQ", width=0, height=0, live=True, title="DR Jazz", summary="DR Jazz Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel23_HQ", width=0, height=0, live=True, title="DR Klassisk", summary="DR Klassisk Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel2_HQ", width=0, height=0, live=True, title="DR Nyheder", summary="DR Nyheder Live", thumb=R(ICON)))	
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel25_HQ", width=0, height=0, live=True, title="DR P5", summary=getRadioMetadata('P5'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel29_HQ", width=0, height=0, live=True, title="DR P6 Beat", summary=getRadioMetadata('P6'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel21_HQ", width=0, height=0, live=True, title="DR P7 Mix", summary=getRadioMetadata('P7'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel24_HQ", width=0, height=0, live=True, title="DR Ramasjang Radio", summary=getRadioMetadata('RAM'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel26_HQ", width=0, height=0, live=True, title="DR R&B", summary=getRadioMetadata('ROB'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel18_HQ", width=0, height=0, live=True, title="DR Boogieradio", summary=getRadioMetadata('SK1'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel27_HQ", width=0, height=0, live=True, title="DR Rock", summary=getRadioMetadata('ROC'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel10_HQ", width=0, height=0, live=True, title="DR Dansktop", summary=getRadioMetadata('DAN'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel19_HQ", width=0, height=0, live=True, title="DR Jazz", summary=getRadioMetadata('JAZ'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel23_HQ", width=0, height=0, live=True, title="DR Klassisk", summary=getRadioMetadata('DAB'), thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel2_HQ", width=0, height=0, live=True, title="DR Nyheder", summary=getRadioMetadata('NEWS'), thumb=R(ICON)))	
 	return dir
 
 def LiveRadioP4Menu(sender):
 	drRTMP = "rtmp://live.gss.dr.dk/live/"
 	dir=MediaContainer(title1="DR NU - P4", title2="P4")
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel18_HQ", width=0, height=0, live=True, title="P4 København", summary="P4 København Live", thumb=R(ICON)))	
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 Sjælland", summary="P4 Sjælland Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel14_HQ", width=0, height=0, live=True, title="P4 Østjylland", summary="P4 Østjylland Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel12_HQ", width=0, height=0, live=True, title="P4 Syd", summary="P4 Syd Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel17_HQ", width=0, height=0, live=True, title="P4 Fyn", summary="P4 Fyn Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel10_HQ", width=0, height=0, live=True, title="P4 Nordjylland", summary="P4 Nordjylland Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel9HQ", width=0, height=0, live=True, title="P4 Midt & Vest", summary="P4 Midt & Vest Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel13_HQ", width=0, height=0, live=True, title="P4 Trekanten", summary="P4 Trekanten Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel6_HQ", width=0, height=0, live=True, title="P4 Bornholm", summary="P4 Bornholm Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel15_HQ", width=0, height=0, live=True, title="P4 Esbjerg", summary="P4 Esbjerg Live", thumb=R(ICON)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 NordvestSjælland", summary="P4 NordvestSjælland Live", thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel18_HQ", width=0, height=0, live=True, title="P4 København", summary='', thumb=R(ICON)))	
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 Sjælland", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel14_HQ", width=0, height=0, live=True, title="P4 Østjylland", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel12_HQ", width=0, height=0, live=True, title="P4 Syd", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel17_HQ", width=0, height=0, live=True, title="P4 Fyn", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel10_HQ", width=0, height=0, live=True, title="P4 Nordjylland", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel9HQ", width=0, height=0, live=True, title="P4 Midt & Vest", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel13_HQ", width=0, height=0, live=True, title="P4 Trekanten", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel6_HQ", width=0, height=0, live=True, title="P4 Bornholm", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel15_HQ", width=0, height=0, live=True, title="P4 Esbjerg", summary='', thumb=R(ICON)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 NordvestSjælland", summary='', thumb=R(ICON)))
 	return dir	
 
 def CreateVideoItem(sender,id, title, items):
@@ -190,5 +199,66 @@ def GetVideos(sender,id):
 	Log("Showing " + clip)
 	return Redirect(clip)
 	
+def getRadioMetadata(channelId):
+	JSONobj = JSON.ObjectFromURL(RADIO_NOWNEXT_URL % channelId)
+	title_now = ""
+	description_now = ""
+	start_now = ""
+	stop_now = "" 
+	title_next = "" 
+	description_next = "" 
+	start_next = ""
+	stop_next = ""
 	
+	try: 
+		title_now = String.StripTags(JSONobj['currentProgram']['title']).replace("'","\'")
+	except : pass
+
+	try:
+		description_now = "\n" +String.StripTags(JSONobj['currentProgram']['description']).replace("'","\'")
+	except: pass
+
+	try:
+		start_now = "'\n" +JSONobj['currentProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['start'].split('T')[1].split(':')[1]
+		stop_now = "-"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[1]
+	except: pass
+
+	try:
+		title_next = "\n\n" + String.StripTags(JSONobj['nextProgram']['title']).replace("'","\'")
+	except : pass
+	try:	
+		description_next = "\n" + String.StripTags(JSONobj['nextProgram']['description']).replace("'","\'")
+	except : pass
+	try:	
+		start_next = "\n" + JSONobj['nextProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['start'].split('T')[1].split(':')[1]
+		stop_next = "-" + JSONobj['nextProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['stop'].split('T')[1].split(':')[1]
+	except: pass
+	except:
+		Log.Debug("Fejl i Datafeed")	
+		
+		
+	strNowNext = title_now + description_now + start_now + stop_now + title_next + description_next + start_next + stop_next
+		
+	Log.Debug(strNowNext)
+	return strNowNext
+
+def getTVLiveMetadata(channelID):
+	
+	programs = XML.ElementFromURL(EPG_TV[channelID], isHTML=False, errors='ignore')
+	
+	for program in programs.iter('program'):
+		info = program.find('pro_publish')
+		starttime = info.findtext('ppu_start_timestamp_presentation').split('.')
+		stoptime = info.findtext('ppu_stop_timestamp_presentation').split('.')
+		dtStart = time.mktime(time.strptime(starttime[0], '%Y-%m-%dT%H:%M:%S'))
+		dtStop = time.mktime(time.strptime(stoptime[0], '%Y-%m-%dT%H:%M:%S'))
+		if time.gmtime(dtStart) < time.gmtime() and time.gmtime(dtStop) > time.gmtime():
+			title = program.findtext('pro_title') + "\n\n" + info.findtext('ppu_description')
+			break
+		else:
+			title = "Ophold i sendefladen"
+	return title
+	
+	
+
 	

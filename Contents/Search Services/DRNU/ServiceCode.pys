@@ -1,0 +1,51 @@
+def Search(query):
+  # Compute the URL and download the JSON
+  url = 'http://www.dr.dk/nu/api/search/%s' % String.Quote(query)
+  items = JSON.ObjectFromURL(url)
+  
+  # Create a container to hold the results
+  c = ObjectContainer()
+  for item in items:
+    try: 
+    	key=APIURL % "videos/" + str(item["id"])
+        thumb=APIURL % "videos/" + str(item["id"]) + "/images/300x400.jpg"
+        if 'imagePath' in item:
+			art="http://dr.dk/nu" + item["imagePath"]
+        elif 'programSerieSlug' in item:
+			art="http://dr.dk/nu/api/programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
+        else:
+			art=thumb
+
+        if 'spotTitle' in item:
+			title=item["spotTitle"]
+        else:
+			title=item["title"]
+        if 'isPremiere' in item:
+			isPremiere = item["isPremiere"]
+        elif 'premiere' in item:
+			isPremiere = item['premiere']
+        
+        if isPremiere:
+			title = title + " *PREMIERE* "
+			
+        if 'spotSubTitle' in item:
+			summary=item["spotSubTitle"]
+			subtitle=None
+        else:
+			summary=item["description"]
+			subtitle=item["broadcastChannel"] + ": " + item["formattedBroadcastTime"]
+			if 'duration' in item:
+				subtitle = subtitle + " ["+ item["duration"] + "]"
+            
+        if 'videoResourceUrl' in item:
+            video=item["videoResourceUrl"]
+        else:
+            video =JSON.ObjectFromURL(key)["videoResourceUrl"]
+		
+                ## Log("title=" + str(title) + ", subtitle=" + str(subtitle) + ", thumb=" + str(thumb) + ", summary=" + str(summary) + ", id=" + str(video)) 
+	dir.Append(Function(VideoItem(GetVideos, title=title,subtitle=subtitle, summary=summary, art=art, thumb=thumb), id=video))     
+    
+    except:
+      Log.Exception("Exception adding video result")
+      
+  return c

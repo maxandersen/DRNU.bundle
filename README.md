@@ -31,3 +31,13 @@ by Plex forum user MTI.
 
 14/06/2011
 		Added support for live TV and radio
+		
+15/06/2001
+		Added Logos for Live TV
+		Added Fanart
+		Bugfix: DR Hit (Obsolete) is now DR R&B
+		
+16/06/2011
+	If available, the information for now / next will be 
+	shown in live radio menu.
+	Currently showing Live TV is shown in Live TV Menu

@@ -22,5 +22,10 @@
 	<string>2</string>
 	<key>PlexPluginMode</key>
 	<string>AlwaysOn</string>
+	<key>PlexSearchServices</key>
+	<dict>
+		<key>DRNU</key>
+		<string>com.plexapp.search.drnu</string>
+	</dict>
 </dict>
 </plist>
