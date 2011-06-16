@@ -41,3 +41,5 @@ by Plex forum user MTI.
 	If available, the information for now / next will be 
 	shown in live radio menu.
 	Currently showing Live TV is shown in Live TV Menu
+	Live Radio moved to music plugins
+	Added background art til Live TV and Live Radio
