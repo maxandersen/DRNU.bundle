@@ -88,6 +88,7 @@ def LiveTVMenu(sender):
 	dir.Append(RTMPVideoItem(drRTMP, clip="livedr03astream3", width=830, height=467, live=True, title="DR Update", summary=getTVLiveMetadata("DR Update"), thumb=R(ICON_DRU), art=R(ART) ) )
 	dir.Append(RTMPVideoItem(drRTMP, clip="livedr04astream3", width=830, height=467, live=True, title="DR K", summary=getTVLiveMetadata("DR K"), thumb=R(ICON_DRK), art=R(ART) ) )
 	dir.Append(RTMPVideoItem(drRTMP, clip="livedr05astream3", width=830, height=467, live=True, title="DR Ramsjang", summary=getTVLiveMetadata("DR Ramasjang"), thumb=R(ICON_DRR), art=R(ART) ) )
+	
 	return dir
 
 
@@ -97,7 +98,7 @@ def LiveRadioMenu(sender):
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel3_HQ", width=0, height=0, live=True, title="P1", summary=getRadioMetadata('P1'), thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel4_HQ", width=0, height=0, live=True, title="P2", summary=getRadioMetadata('P2'), thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel15_HQ", width=0, height=0, live=True, title="P3", summary=getRadioMetadata('P3'), thumb=R(ICON),art=R(ART)))
-	dir.Append(Function(DirectoryItem(LiveRadioP4Menu,"P4",subtitle="P4", summary="",thumb=R(ICON),art=R(ART))))
+	dir.Append(Function(DirectoryItem(LiveRadioP4Menu,"P4",subtitle="P4", summary="Vælg din regionale P4",thumb=R(ICON),art=R(ART))))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel25_HQ", width=0, height=0, live=True, title="DR P5", summary=getRadioMetadata('P5'), thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel29_HQ", width=0, height=0, live=True, title="DR P6 Beat", summary=getRadioMetadata('P6'), thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel21_HQ", width=0, height=0, live=True, title="DR P7 Mix", summary=getRadioMetadata('P7'), thumb=R(ICON),art=R(ART)))
@@ -114,17 +115,17 @@ def LiveRadioMenu(sender):
 def LiveRadioP4Menu(sender):
 	drRTMP = "rtmp://live.gss.dr.dk/live/"
 	dir=MediaContainer(title1="DR NU - P4", title2="P4")
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel18_HQ", width=0, height=0, live=True, title="P4 København", summary='', thumb=R(ICON),art=R(ART)))	
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 Sjælland", summary='', thumb=R(ICON),art=R(ART)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel18_HQ", width=0, height=0, live=True, title="P4 København", summary=getRadioMetadata('KH4'), thumb=R(ICON),art=R(ART)))	
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 Sjælland", summary=getRadioMetadata('NV4'), thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel14_HQ", width=0, height=0, live=True, title="P4 Østjylland", summary='', thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel12_HQ", width=0, height=0, live=True, title="P4 Syd", summary='', thumb=R(ICON),art=R(ART)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel17_HQ", width=0, height=0, live=True, title="P4 Fyn", summary='', thumb=R(ICON),art=R(ART)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel17_HQ", width=0, height=0, live=True, title="P4 Fyn", summary=getRadioMetadata('OD4'), thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel10_HQ", width=0, height=0, live=True, title="P4 Nordjylland", summary='', thumb=R(ICON),art=R(ART)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel9HQ", width=0, height=0, live=True, title="P4 Midt & Vest", summary='', thumb=R(ICON),art=R(ART)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel13_HQ", width=0, height=0, live=True, title="P4 Trekanten", summary='', thumb=R(ICON),art=R(ART)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel9HQ", width=0, height=0, live=True, title="P4 Midt & Vest", summary=getRadioMetadata('HO4'), thumb=R(ICON),art=R(ART)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel13_HQ", width=0, height=0, live=True, title="P4 Trekanten", summary=getRadioMetadata('TR4'), thumb=R(ICON),art=R(ART)))
 	dir.Append(RTMPVideoItem(drRTMP, clip="Channel6_HQ", width=0, height=0, live=True, title="P4 Bornholm", summary='', thumb=R(ICON),art=R(ART)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel15_HQ", width=0, height=0, live=True, title="P4 Esbjerg", summary='', thumb=R(ICON),art=R(ART)))
-	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 NordvestSjælland", summary='', thumb=R(ICON),art=R(ART)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel15_HQ", width=0, height=0, live=True, title="P4 Esbjerg", summary=getRadioMetadata('ES4'), thumb=R(ICON),art=R(ART)))
+	dir.Append(RTMPVideoItem(drRTMP, clip="Channel11_HQ", width=0, height=0, live=True, title="P4 NordvestSjælland", summary=getRadioMetadata('NS4'), thumb=R(ICON),art=R(ART)))
 	return dir	
 
 def CreateVideoItem(sender,id, title, items):
@@ -212,39 +213,32 @@ def getRadioMetadata(channelId):
 	start_next = ""
 	stop_next = ""
 	
-	try: 
-		title_now = String.StripTags(JSONobj['currentProgram']['title']).replace("'","\'")
-	except : pass
+	if JSONobj['currentProgram']:
+		if JSONobj['currentProgram']['title']:
+			title_now = String.StripTags(JSONobj['currentProgram']['title']).replace("'","\'")
+		if JSONobj['currentProgram']['description']:
+			description_now = "\n" +String.StripTags(JSONobj['currentProgram']['description']).replace("'","\'")
+		if JSONobj['currentProgram']['start'] and JSONobj['currentProgram']['stop']:
+			start_now = "'\n" +JSONobj['currentProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['start'].split('T')[1].split(':')[1]
+			stop_now = "-"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[1]
 
-	try:
-		description_now = "\n" +String.StripTags(JSONobj['currentProgram']['description']).replace("'","\'")
-	except: pass
-
-	try:
-		start_now = "'\n" +JSONobj['currentProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['start'].split('T')[1].split(':')[1]
-		stop_now = "-"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[1]
-	except: pass
-
-	try:
-		title_next = "\n\n" + String.StripTags(JSONobj['nextProgram']['title']).replace("'","\'")
-	except : pass
-	try:	
-		description_next = "\n" + String.StripTags(JSONobj['nextProgram']['description']).replace("'","\'")
-	except : pass
-	try:	
-		start_next = "\n" + JSONobj['nextProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['start'].split('T')[1].split(':')[1]
-		stop_next = "-" + JSONobj['nextProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['stop'].split('T')[1].split(':')[1]
-	except: pass
-	except:
-		Log.Debug("Fejl i Datafeed")	
-		
-		
+	if JSONobj['nextProgram']:
+		if JSONobj['nextProgram']['title']:
+			title_next = "\n\n" + String.StripTags(JSONobj['nextProgram']['title']).replace("'","\'")
+		if JSONobj['nextProgram']['description']:
+			description_next = "\n" + String.StripTags(JSONobj['nextProgram']['description']).replace("'","\'")
+		if JSONobj['nextProgram']['start'] and JSONobj['nextProgram']['stop']:
+			start_next = "\n" + JSONobj['nextProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['start'].split('T')[1].split(':')[1]
+			stop_next = "-" + JSONobj['nextProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['stop'].split('T')[1].split(':')[1]
+				
 	strNowNext = title_now + description_now + start_now + stop_now + title_next + description_next + start_next + stop_next
 		
 	Log.Debug(strNowNext)
 	return strNowNext
 
 def getTVLiveMetadata(channelID):
+
+
 	channels = JSON.ObjectFromURL("http://www.dr.dk/nu/api/nownext", cacheTime=60)
 	title_now = "Ingen titel tilgængenlig"
 	title_next = "Ingen titel tilgængenlig"
@@ -252,39 +246,27 @@ def getTVLiveMetadata(channelID):
 	description_next = ""
 				
 	for channel in channels["channels"]:
-		if channel['channel'] == channelID :
-			Log.Debug(channel['channel'])
-			try:
-				title_now = L(channel['current']['programTitle'])
-				Log.Debug(title_now)
-			except: pass
-			except:
-				title_now= ("Ingen udensendelse")
-			try:
-				description_now = (channel['current']['description'])
-				Log.Debug(description_now)
-			except: pass
-			except:
-				description_now = u (" ")
-			try:
-				title_next = L(channel['next']['programTitle'])
-				Log.Debug(title_next)
-			except: pass
-			except:
-				title_next = u (" ")
-			try:
-				description_next = L(channel['next']['description'])
-				Log.Debug(description_next)
-			except:pass
-			except:
-				description_next = " "
+		if channelID in channel['channel'] :
+			if channel['current']:
+				if channel['current']['programTitle']:
+					title_now = L(channel['current']['programTitle'])
+					Log.Debug(title_now)
+				if channel['current']['description']:
+					description_now = (channel['current']['description'])
+					Log.Debug(description_now)
+			if channel['next']:
+				if channel['next']['programTitle']:
+					title_next = L(channel['next']['programTitle'])
+					Log.Debug(title_next)
+				if channel['next']['description']:
+					description_next = L(channel['next']['description'])
+					Log.Debug(description_next)
 			break
 				
 	title = "Nu: " + title_now + "\n" + description_now  + "\n\nNaeste: " + title_next + "\n" + description_next
 			
 	Log.Debug(title)		
 	return str(title)
-
 
 
 
