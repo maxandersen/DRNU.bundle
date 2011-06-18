@@ -1,5 +1,11 @@
 [
   {
+    "id":"group_per_letter",
+    "type":"bool",
+    "label":"Group Programs per first letter",
+    "default": "false"
+  },
+  {
     "id":"quality",
     "type":"enum",
     "label":"Quality",

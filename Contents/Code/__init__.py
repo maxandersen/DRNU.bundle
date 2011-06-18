@@ -56,6 +56,9 @@ def ProgramSerierMenu(sender,id,title):
 	dir=MediaContainer(title1="DR NU", title2=title)
 	
 	JSONObject=JSON.ObjectFromURL(APIURL % "programseries.json")
+
+	bucket = dict()
+	letter = ''
 	for program in JSONObject:
 		slug=program["slug"]
 		title=program["title"]
@@ -65,10 +68,29 @@ def ProgramSerierMenu(sender,id,title):
 		
 		summary=program["description"]
 		thumb=APIURL % "programseries/" + slug + "/images/600x600.jpg"
-                dir.Append(Function(DirectoryItem(ProgramMenu,title=title,subtitle=subtitle,thumb=thumb,summary=summary),id=slug, title=title))
+
+		letter = title[0].upper()
+		if letter not in bucket:
+			bucket[letter] = list()
+		tuple = dict(title=title,subtitle=subtitle,thumb=thumb,summary=summary,id=slug)
+		bucket[letter].append(tuple)
+
+	for firstChar in sorted(bucket.iterkeys()):
+		serier = bucket[firstChar]
+		if Prefs['group_per_letter']:
+			dir.Append(Function(DirectoryItem(LetterMenu, title=firstChar, subtitle= str(len(serier)) + " programmer"),serier=serier, title=firstChar))
+		else:
+			for serie in serier:
+				dir.Append(Function(DirectoryItem(ProgramMenu,**serie),id=serie["id"],title=serie["title"]))
 	return dir
 
+def LetterMenu(sender,title, serier):
+	dir=MediaContainer(title1="DR NU", title2=title)
+	for serie in serier:
+		dir.Append(Function(DirectoryItem(ProgramMenu,**serie),id=serie["id"],title=serie["title"]))
+	return dir
 
+		
 def NewestMenu(sender,id, title):
         return CreateVideoItem(sender, id=id, title=title, items=JSON.ObjectFromURL(APIURL % "videos/newest.json"))
 
