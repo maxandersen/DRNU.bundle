@@ -26,27 +26,27 @@ Based on plugin posted at
 by Plex forum user MTI.
 
 07/03/2011: 
-	    Added support for Newest, Most Viewed & Spotlight.
-	    Started making better usage of summary/subtitles.
+   + Added support for Newest, Most Viewed & Spotlight.
+   + Started making better usage of summary/subtitles.
 
-14/06/2011
-		Added support for live TV and radio
+14/06/2011:
+   + Added support for live TV and radio
 		
-15/06/2001
-		Added Logos for Live TV
-		Added Fanart
-		Bugfix: DR Hit (Obsolete) is now DR R&B
+15/06/2001:
+   + Added Logos for Live TV
+   + Added Fanart
+   + Bugfix: DR Hit (Obsolete) is now DR R&B
 		
-16/06/2011
-	If available, the information for now / next will be 
-	shown in live radio menu.
-	Currently showing Live TV is shown in Live TV Menu
-	Live Radio moved to music plugins
-	Added background art til Live TV and Live Radio
+16/06/2011:
+   + If available, the information for now / next will be shown in live radio menu. 
+   + Currently showing Live TV is shown in Live TV Menu 
+   + Live Radio moved to music plugins
+   + Added background art til Live TV and Live Radio
 	
-18/06/2011
-	Solved problem with on-demand clips buffering, and clips 
-	looking bad
-	Bugfix. Some data did not supply braodcast channel and 
-	broadcast time, which prevented the plugin from playing 
-	the file
+18/06/2011:
+   + Solved problem with on-demand clips buffering, and clips looking bad
+   + Bugfix. Some data did not supply braodcast channel and broadcast time, which prevented the plugin from playing the file
+   + Bugfix. Some videos had no bitrate set and provided only mp4 and wmv source. Now choosing highest bitrate and otherwise first mp4 video found.
+   + Bugfix. Videos not available from DK now marked with [DK Only] and if no video source found marked with "Not found"
+
+ 

@@ -51,6 +51,7 @@ def MusicMainMenu():
 	dir = MediaContainer(viewGroup="List")
 	dir.Append(Function(DirectoryItem(LiveRadioMenu, "Live Radio", subtitle="Live Radio", summary="", thumb=R(ICON), art=R(ART))))
 	return dir
+
 def ProgramSerierMenu(sender,id,title):
 	dir=MediaContainer(title1="DR NU", title2=title)
 	
@@ -196,29 +197,58 @@ def CreateVideoItem(sender,id, title, items):
 		else:
 			JSONvideoUrl = str(JSON.ObjectFromURL(key)["videoResourceUrl"])
 
-		JSONvideo = JSON.ObjectFromURL(JSONvideoUrl)['links'][1]
-		if 'width' not in JSONvideo and 'height' not in JSONvideo:
-			dir.Append(RTMPVideoItem("rtmp://vod.dr.dk/cms/", clip= "mp4:" + JSONvideo['uri'].split(":")[2], live=False, title=title, summary=summary, thumb=thumb ))
+		Log("Adding video from " + JSONvideoUrl)
+
+		content = JSON.ObjectFromURL(JSONvideoUrl)
+
+		if 'restrictedToDenmark' in content:
+			dkOnly = content['restrictedToDenmark']
 		else:
-			dir.Append(RTMPVideoItem("rtmp://vod.dr.dk/cms/", clip= "mp4:" + JSONvideo['uri'].split(":")[2], width=JSONvideo['width'], height=JSONvideo['height'], live=False, title=title, summary=summary, thumb=thumb ))
+			dkOnly = false
+
+		if dkOnly:
+			title = title + " [DK Only]"
+
+		# get mp4 first (i.e. Barda only has mp4 and wmv, but no quality)
+		videos = [elem for elem in content["links"] if elem["fileType"] == "mp4" ]
+
+		if not videos:
+			Log("No videos found for " + title)
+			## TODO: figure out a better way to show info about no videos available
+			title = "Not Found: " + title
+			dir.Append(RTMPVideoItem("novideourl", clip="novideofound", live=False, title=title, summary=summary, thumb=thumb))
+		else:
+			for video in videos:
+				# get the qualities
+				map = dict()
+				if 'bitrateKbps' in video:
+					quality=int(video["bitrateKbps"])
+					uri = video["uri"]
+					map[quality] = uri
+					
+			if map:
+				bestUri = map[sorted(map)[-1]] ## gets the uri with the highest bitrate by using -1 (last element) or 0 for first element with lowest bitrate 
+			else:
+				bestUri = videos[0]["uri"]
 		
-		##addVideos(sender,video,title,subtitle,summary,art,thumb,dir)
+			baseUrl = "rtmp://vod.dr.dk/cms/"
+		       	clip = "mp4:" + bestUri.split(":")[2]
+
+	       		Log("showing: " + clip)
+		
+       			if 'width' not in content and 'height' not in content:
+				dir.Append(RTMPVideoItem(baseUrl,
+							 clip=clip,
+							 live=False, title=title, summary=summary, thumb=thumb ))
+			else:
+				dir.Append(RTMPVideoItem(baseUrl,
+							 clip=clip,
+							 width=content['width'], height=content['height'],
+							 live=False, title=title, summary=summary, thumb=thumb ))
 	return dir
 
-def addVideos(sender,id,title,subtitle,summary,art,thumb,dir):
-	content = JSON.ObjectFromURL(id)
-        for video in content["links"]:
-		uri=video["uri"]
-		tempclip = uri.split(":")
-		Log(uri)
-		clip = 'http://vodfiles.dr.dk/' + tempclip[2]	
-		dir.Append(Function(VideoItem(GetVideo, title=title + " (" + str(video["bitrateKbps"]) + " bKps)", subtitle=subtitle, summary=summary, art=art, thumb=thumb),clip=clip))
-		dir.Append(RTMPVideoItem(tempclip[0] + ":" + tempclip[1], clip=tempclip[2],title=title + " ( RTPM:"+ str(video["bitrateKbps"]) + " bKps)", subtitle=subtitle, summary=summary, art=art, thumb=thumb))
-
-def GetVideo(sender, clip):
-       	Log("Showing " + clip)
-	return Redirect(clip)
-        
+def NoVideos(sender,id):
+	return
 
 def GetVideos(sender,id):
 	content = JSON.ObjectFromURL(id)
@@ -230,6 +260,7 @@ def GetVideos(sender,id):
 		map[quality] = uri
 	Log("quality: " + str(map))
 	bestUri = map[sorted(map)[0]]
+	
 	tempclip = bestUri.split(":")
 	clip = 'http://vodfiles.dr.dk/' + tempclip[2]
 	Log("Showing " + clip)
