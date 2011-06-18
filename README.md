@@ -48,5 +48,5 @@ by Plex forum user MTI.
    + Bugfix. Some data did not supply braodcast channel and broadcast time, which prevented the plugin from playing the file
    + Bugfix. Some videos had no bitrate set and provided only mp4 and wmv source. Now choosing highest bitrate and otherwise first mp4 video found.
    + Bugfix. Videos not available from DK now marked with [DK Only] and if no video source found marked with "Not found"
-
+   + Feature. Quality setting "high, medium, low" which will be used to select videos that have multiple bitrates available.
  
