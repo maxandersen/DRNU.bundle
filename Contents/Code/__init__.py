@@ -99,18 +99,6 @@ def LiveTVMenu(sender):
 							summary=getTVLiveMetadata("DR Ramasjang"), 
 							thumb=R(ICON_DRR), 
 							art=R(ART) ) )
-	#po1 = PartObject(key = RTMPVideoItem("rtmp://rtmplive.dr.dk/live", clip="livedr01astream3", width = 830, height = 467, live=True, title = "DR PO", summary = "", thump=R(ICON_DR1), art=R(ART)))
-	#media = MediaObject(
-	#				protocols = "RTMP",
-	#				bitrate = 1000,
-	#				video_codec = "MP4",
-	#				audio_channels = 2,
-	#				container = "MP4",
-	#				)
-	#media.add(po1)
-	#video = VideoClipObject(title = "test")
-	#video.add(media)
-	#dir.Append(video)
 
 	return dir
 
@@ -209,28 +197,43 @@ def CreateVideoItem(sender,id, title, items):
 		if dkOnly:
 			title = title + " [DK Only]"
 
+			
 		# get mp4 first (i.e. Barda only has mp4 and wmv, but no quality)
-		videos = [elem for elem in content["links"] if elem["fileType"] == "mp4" ]
-
+		videos = content["links"]
+		Log(str(len(videos)) + " any videos found " + str(videos))
+		videos = [elem for elem in videos if elem["fileType"] == "mp4" ]
+		Log(str(len(videos)) + " mp4 videos found " + str(videos))
+		
 		if not videos:
 			Log("No videos found for " + title)
 			## TODO: figure out a better way to show info about no videos available
 			title = "Not Found: " + title
 			dir.Append(RTMPVideoItem("novideourl", clip="novideofound", live=False, title=title, summary=summary, thumb=thumb))
 		else:
+			map = dict()
 			for video in videos:
 				# get the qualities
-				map = dict()
 				if 'bitrateKbps' in video:
 					quality=int(video["bitrateKbps"])
 					uri = video["uri"]
 					map[quality] = uri
-					
+				
 			if map:
-				bestUri = map[sorted(map)[-1]] ## gets the uri with the highest bitrate by using -1 (last element) or 0 for first element with lowest bitrate 
+				if Prefs['quality'] == "high":
+					idx = sorted(map)[-1] ## highest bitrate by using -1 (last element)
+					
+				elif Prefs['quality'] == "low":
+					idx = sorted(map)[0] ## 0 for first element with lowest bitrate
+				else:
+					if len(map) <= 2:
+						idx = sorted(map)[0]
+					elif len(map) > 2:
+						idx = sorted(map)[len(map)/2]
+				Log("Quality: " + Prefs['quality'] + "=" + str(idx) + " from " + str(len(map)) + ":" + str(map))
+				bestUri = map[idx]
 			else:
 				bestUri = videos[0]["uri"]
-		
+
 			baseUrl = "rtmp://vod.dr.dk/cms/"
 		       	clip = "mp4:" + bestUri.split(":")[2]
 
