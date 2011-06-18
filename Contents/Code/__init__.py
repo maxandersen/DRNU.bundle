@@ -6,7 +6,7 @@ MUSIC_PREFIX = "/music/drnu"
 
 APIURL = "http://www.dr.dk/NU/api/%s"
 RADIO_NOWNEXT_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/programInfo.drxml?channelId=%s"
-
+RADIO_TRACKS_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/trackInfo.drxml?channelId=%s"
 NAME  = "DR NU"
 ART   = 'art-default.jpg'
 ICON  = 'DR_icon-default.png'
@@ -30,11 +30,12 @@ HTTP.CacheTime = 3600
 def Start():
 	Plugin.AddPrefixHandler(VIDEO_PREFIX, VideoMainMenu, NAME, ICON, ART)
 	Plugin.AddPrefixHandler(MUSIC_PREFIX, MusicMainMenu, NAME, ICON, ART)
-	Plugin.AddViewGroup("InfoList", viewMode="Info List", mediaType="items")
+	Plugin.AddViewGroup("InfoList", viewMode="InfoList", mediaType="items")
 	Plugin.AddViewGroup("List", viewMode="List", mediaType="items")
 	MediaContainer.art = R(ART)
 	MediaContainer.title1 = NAME
 	DirectoryItem.thumb = R(ICON)
+	HTTP.Headers['User-Agent'] = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13"
 
 def VideoMainMenu():
 	dir = MediaContainer(viewGroup="List")
@@ -87,8 +88,29 @@ def LiveTVMenu(sender):
 	dir.Append(RTMPVideoItem(drRTMP, clip="livedr02astream3", width=830, height=467, live=True, title="DR2", summary=getTVLiveMetadata("DR2"), thumb=R(ICON_DR2), art=R(ART) ) )
 	dir.Append(RTMPVideoItem(drRTMP, clip="livedr03astream3", width=830, height=467, live=True, title="DR Update", summary=getTVLiveMetadata("DR Update"), thumb=R(ICON_DRU), art=R(ART) ) )
 	dir.Append(RTMPVideoItem(drRTMP, clip="livedr04astream3", width=830, height=467, live=True, title="DR K", summary=getTVLiveMetadata("DR K"), thumb=R(ICON_DRK), art=R(ART) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr05astream3", width=830, height=467, live=True, title="DR Ramsjang", summary=getTVLiveMetadata("DR Ramasjang"), thumb=R(ICON_DRR), art=R(ART) ) )
-	
+	dir.Append(RTMPVideoItem(
+							drRTMP, 
+							clip="livedr05astream3", 
+							width=830, 
+							height=467, 
+							live=True, 
+							title="DR Ramsjang", 
+							summary=getTVLiveMetadata("DR Ramasjang"), 
+							thumb=R(ICON_DRR), 
+							art=R(ART) ) )
+	#po1 = PartObject(key = RTMPVideoItem("rtmp://rtmplive.dr.dk/live", clip="livedr01astream3", width = 830, height = 467, live=True, title = "DR PO", summary = "", thump=R(ICON_DR1), art=R(ART)))
+	#media = MediaObject(
+	#				protocols = "RTMP",
+	#				bitrate = 1000,
+	#				video_codec = "MP4",
+	#				audio_channels = 2,
+	#				container = "MP4",
+	#				)
+	#media.add(po1)
+	#video = VideoClipObject(title = "test")
+	#video.add(media)
+	#dir.Append(video)
+
 	return dir
 
 
@@ -133,6 +155,7 @@ def CreateVideoItem(sender,id, title, items):
 	for item in items:
 		key=APIURL % "videos/" + str(item["id"])
 		thumb=APIURL % "videos/" + str(item["id"]) + "/images/600x600.jpg"
+
 		if 'imagePath' in item:
 			art="http://dr.dk/nu" + item["imagePath"]
 		elif 'programSerieSlug' in item:
@@ -163,12 +186,16 @@ def CreateVideoItem(sender,id, title, items):
 				subtitle = subtitle + " ["+ item["duration"] + "]"
 
 		if 'videoResourceUrl' in item:
-			video=item["videoResourceUrl"]
-                else:
-			video =JSON.ObjectFromURL(key)["videoResourceUrl"]
+			JSONvideoUrl=item["videoResourceUrl"]
+		else:
+			JSONvideoUrl = str(JSON.ObjectFromURL(key)["videoResourceUrl"])
+
+		JSONvideo = JSON.ObjectFromURL(JSONvideoUrl)['links'][1]
+		if 'width' not in JSONvideo and 'height' not in JSONvideo:
+			dir.Append(RTMPVideoItem("rtmp://vod.dr.dk/cms/", clip= "mp4:" + JSONvideo['uri'].split(":")[2], live=False, title=title, summary=summary, thumb=thumb ))
+		else:
+			dir.Append(RTMPVideoItem("rtmp://vod.dr.dk/cms/", clip= "mp4:" + JSONvideo['uri'].split(":")[2], width=JSONvideo['width'], height=JSONvideo['height'], live=False, title=title, summary=summary, thumb=thumb ))
 		
-                ## Log("title=" + str(title) + ", subtitle=" + str(subtitle) + ", thumb=" + str(thumb) + ", summary=" + str(summary) + ", id=" + str(video)) 
-		dir.Append(Function(VideoItem(GetVideos, title=title,subtitle=subtitle, summary=summary, art=art, thumb=thumb), id=video))     
 		##addVideos(sender,video,title,subtitle,summary,art,thumb,dir)
 	return dir
 
@@ -203,7 +230,8 @@ def GetVideos(sender,id):
 	return Redirect(clip)
 	
 def getRadioMetadata(channelId):
-	JSONobj = JSON.ObjectFromURL(RADIO_NOWNEXT_URL % channelId)
+	JSONobj = JSON.ObjectFromURL(RADIO_NOWNEXT_URL % channelId, cacheTime = 60)
+	JSONobjTracks = JSON.ObjectFromURL(RADIO_TRACKS_URL % channelId, cacheTime=30, errors='Ingore')
 	title_now = ""
 	description_now = ""
 	start_now = ""
@@ -212,6 +240,7 @@ def getRadioMetadata(channelId):
 	description_next = "" 
 	start_next = ""
 	stop_next = ""
+	trackop = ""
 	
 	if JSONobj['currentProgram']:
 		if JSONobj['currentProgram']['title']:
@@ -230,8 +259,18 @@ def getRadioMetadata(channelId):
 		if JSONobj['nextProgram']['start'] and JSONobj['nextProgram']['stop']:
 			start_next = "\n" + JSONobj['nextProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['start'].split('T')[1].split(':')[1]
 			stop_next = "-" + JSONobj['nextProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['stop'].split('T')[1].split(':')[1]
-				
-	strNowNext = title_now + description_now + start_now + stop_now + title_next + description_next + start_next + stop_next
+	try:
+		if JSONobjTracks['tracks']:
+			pre1 = "\n\nSeneste Titel: "
+			for track in JSONobjTracks['tracks']:
+				if track['displayArtist']:
+					trackop = trackop + pre1 + track['displayArtist']
+				if track['title']:
+					trackop = trackop + "\n" + track['title'] + "\n\n"
+				pre1 = "Forrige: "
+	except:pass			
+					
+	strNowNext = title_now + description_now + start_now + stop_now + title_next + description_next + start_next + stop_next + trackop
 		
 	Log.Debug(strNowNext)
 	return strNowNext
@@ -267,6 +306,7 @@ def getTVLiveMetadata(channelID):
 			
 	Log.Debug(title)		
 	return str(title)
+
 
 
 

@@ -43,9 +43,24 @@ def Search(query):
             video =JSON.ObjectFromURL(key)["videoResourceUrl"]
 		
                 ## Log("title=" + str(title) + ", subtitle=" + str(subtitle) + ", thumb=" + str(thumb) + ", summary=" + str(summary) + ", id=" + str(video)) 
-	dir.Append(Function(VideoItem(GetVideos, title=title,subtitle=subtitle, summary=summary, art=art, thumb=thumb), id=video))     
+	c.Append(Function(VideoItem(GetVideos, title=title,subtitle=subtitle, summary=summary, art=art, thumb=thumb), id=video))     
     
     except:
       Log.Exception("Exception adding video result")
       
   return c
+  
+def GetVideos(sender,id):
+  content = JSON.ObjectFromURL(id)
+  
+  map = dict()
+  for video in content["links"]:
+      quality=int(video["bitrateKbps"])
+      uri = video["uri"]
+      map[quality] = uri
+  Log("quality: " + str(map))
+  bestUri = map[sorted(map)[0]]
+  tempclip = bestUri.split(":")
+  clip = 'http://vodfiles.dr.dk/' + tempclip[2]
+  Log("Showing " + clip)
+  return Redirect(clip)
