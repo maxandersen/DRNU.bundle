@@ -181,9 +181,15 @@ def CreateVideoItem(sender,id, title, items):
 			subtitle=None
 		else:
 			summary=item["description"]
-			subtitle=item["broadcastChannel"] + ": " + item["formattedBroadcastTime"]
+			if item['broadcastChannel'] and item['formattedBroadcastTime'] is None:
+				subtitle=item["broadcastChannel"]
+			elif item['broadcastChannel'] is None and item['formattedBroadcastTime']:
+				subtitle=str(item["formattedBroadcastTime"])
+			else:
+				subtitle=str(item["broadcastChannel"]) + ": " + str(item["formattedBroadcastTime"])
+			
 			if 'duration' in item:
-				subtitle = subtitle + " ["+ item["duration"] + "]"
+				subtitle = subtitle + " ["+ str(item["duration"]) + "]"
 
 		if 'videoResourceUrl' in item:
 			JSONvideoUrl=item["videoResourceUrl"]
@@ -230,8 +236,9 @@ def GetVideos(sender,id):
 	return Redirect(clip)
 	
 def getRadioMetadata(channelId):
+	
+	# This is a undocumented feature that might break the plugin.
 	JSONobj = JSON.ObjectFromURL(RADIO_NOWNEXT_URL % channelId, cacheTime = 60)
-	JSONobjTracks = JSON.ObjectFromURL(RADIO_TRACKS_URL % channelId, cacheTime=30, errors='Ingore')
 	title_now = ""
 	description_now = ""
 	start_now = ""
@@ -259,7 +266,9 @@ def getRadioMetadata(channelId):
 		if JSONobj['nextProgram']['start'] and JSONobj['nextProgram']['stop']:
 			start_next = "\n" + JSONobj['nextProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['start'].split('T')[1].split(':')[1]
 			stop_next = "-" + JSONobj['nextProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['stop'].split('T')[1].split(':')[1]
+
 	try:
+		JSONobjTracks = JSON.ObjectFromURL(RADIO_TRACKS_URL % channelId, cacheTime=30, errors='Ingore')
 		if JSONobjTracks['tracks']:
 			pre1 = "\n\nSeneste Titel: "
 			for track in JSONobjTracks['tracks']:
@@ -276,7 +285,7 @@ def getRadioMetadata(channelId):
 	return strNowNext
 
 def getTVLiveMetadata(channelID):
-
+	# this is a undocumented feature that might break the plugin
 
 	channels = JSON.ObjectFromURL("http://www.dr.dk/nu/api/nownext", cacheTime=60)
 	title_now = "Ingen titel tilgængenlig"

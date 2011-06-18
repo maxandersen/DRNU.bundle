@@ -43,3 +43,10 @@ by Plex forum user MTI.
 	Currently showing Live TV is shown in Live TV Menu
 	Live Radio moved to music plugins
 	Added background art til Live TV and Live Radio
+	
+18/06/2011
+	Solved problem with on-demand clips buffering, and clips 
+	looking bad
+	Bugfix. Some data did not supply braodcast channel and 
+	broadcast time, which prevented the plugin from playing 
+	the file
