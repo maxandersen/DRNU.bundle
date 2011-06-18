@@ -65,8 +65,7 @@ def ProgramSerierMenu(sender,id,title):
 		
 		summary=program["description"]
 		thumb=APIURL % "programseries/" + slug + "/images/600x600.jpg"
-                Log("thumb=" + thumb)
-		dir.Append(Function(DirectoryItem(ProgramMenu,title=title,subtitle=subtitle,thumb=thumb,summary=summary),id=slug, title=title))
+                dir.Append(Function(DirectoryItem(ProgramMenu,title=title,subtitle=subtitle,thumb=thumb,summary=summary),id=slug, title=title))
 	return dir
 
 
@@ -200,12 +199,9 @@ def CreateVideoItem(sender,id, title, items):
 			
 		# get mp4 first (i.e. Barda only has mp4 and wmv, but no quality)
 		videos = content["links"]
-		Log(str(len(videos)) + " any videos found " + str(videos))
 		videos = [elem for elem in videos if elem["fileType"] == "mp4" ]
-		Log(str(len(videos)) + " mp4 videos found " + str(videos))
 		
 		if not videos:
-			Log("No videos found for " + title)
 			## TODO: figure out a better way to show info about no videos available
 			title = "Not Found: " + title
 			dir.Append(RTMPVideoItem("novideourl", clip="novideofound", live=False, title=title, summary=summary, thumb=thumb))
@@ -229,7 +225,6 @@ def CreateVideoItem(sender,id, title, items):
 						idx = sorted(map)[0]
 					elif len(map) > 2:
 						idx = sorted(map)[len(map)/2]
-				Log("Quality: " + Prefs['quality'] + "=" + str(idx) + " from " + str(len(map)) + ":" + str(map))
 				bestUri = map[idx]
 			else:
 				bestUri = videos[0]["uri"]
@@ -237,8 +232,7 @@ def CreateVideoItem(sender,id, title, items):
 			baseUrl = "rtmp://vod.dr.dk/cms/"
 		       	clip = "mp4:" + bestUri.split(":")[2]
 
-	       		Log("showing: " + clip)
-		
+	       		
        			if 'width' not in content and 'height' not in content:
 				dir.Append(RTMPVideoItem(baseUrl,
 							 clip=clip,
@@ -253,22 +247,6 @@ def CreateVideoItem(sender,id, title, items):
 def NoVideos(sender,id):
 	return
 
-def GetVideos(sender,id):
-	content = JSON.ObjectFromURL(id)
-	
-	map = dict()
-	for video in content["links"]:
-		quality=int(video["bitrateKbps"])
-		uri = video["uri"]
-		map[quality] = uri
-	Log("quality: " + str(map))
-	bestUri = map[sorted(map)[0]]
-	
-	tempclip = bestUri.split(":")
-	clip = 'http://vodfiles.dr.dk/' + tempclip[2]
-	Log("Showing " + clip)
-	return Redirect(clip)
-	
 def getRadioMetadata(channelId):
 	
 	# This is a undocumented feature that might break the plugin.
