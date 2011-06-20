@@ -23,8 +23,8 @@ DR_LIVE_STREAMS ={"DR1": [("livedr01astream3", 1000), ("livedr01bstream3", 1000)
 			"RAM": [("livedr05astream3", 1000), ("livedr05bstream3", 1000),("livedr05astream2", 500),("livedr05bstream2", 500), ("livedr05astream1", 250), ("livedr05bstream1",250)],
 			"DRK": [("livedr04astream3", 1000), ("livedr04bstream3", 1000),("livedr04astream2", 500),("livedr04bstream2", 500), ("livedr04astream1", 250), ("livedr04bstream1",250)]	
 			}
-DR_TITLE_ICONS = {"DR1": ("DR 1", "DR1_icon-default.png"),
-				"DR2": ("DR 2", "DR2_icon-default.png"),
+DR_TITLE_ICONS = {"DR1": ("DR1", "DR1_icon-default.png"),
+				"DR2": ("DR2", "DR2_icon-default.png"),
 				"DRU":	("DR K", "DRK_icon-default.png"),
 				"RAM":	("DR Ramasjang", "DR_RAMASJANG_icon-default.png"),
 				"DRK":	("DR Update", "DR_UPDATE_icon-default.png" )}
@@ -111,7 +111,10 @@ def ProgramMenu(sender,id, title):
 
 def LiveTVMenu(sender):
 	dir = ObjectContainer(title1="title - Live TV", title2="Live TV")
-	for channel in DR_LIVE_STREAMS: 
+	#sorted_channels = sortedDictValues(DR_LIVE_STREAMS)
+	keys = DR_LIVE_STREAMS.keys()
+	keys.sort()
+	for channel in keys: 
 		dir.add(LiveTVChannel(channel))
 	
 	return dir
@@ -335,9 +338,9 @@ def getTVLiveMetadata(channelID):
 	description_next = ""
 				
 	for channel in channels["channels"]:
-		if channelID in channel['channel'] :
+		if DR_TITLE_ICONS[channelID][0] in channel['channel'] :
 			if channel['current']:
-				if channel['current']['programTitle']:
+				if channel['current']:
 					title_now = L(channel['current']['programTitle'])
 					Log.Debug(title_now)
 				if channel['current']['description']:
@@ -359,4 +362,7 @@ def getTVLiveMetadata(channelID):
 
 
 
-
+def sortedDictValues(adict):
+    items = adict.items()
+    items.sort()
+    return [value for key, value in items]
