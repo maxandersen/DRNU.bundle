@@ -10,11 +10,6 @@ RADIO_TRACKS_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/trackInfo.d
 NAME  = "DR NU"
 ART   = 'art-default.jpg'
 ICON  = 'DR_icon-default.png'
-ICON_DR1 = "DR1_icon-default.png"
-ICON_DR2 = "DR2_icon-default.png"
-ICON_DRK = "DRK_icon-default.png"
-ICON_DRR = "DR_RAMASJANG_icon-default.png"
-ICON_DRU = "DR_UPDATE_icon-default.png"
 
 EPG_TV = { "DR1":"http://www.dr.dk/Tjenester/epglive/epg.DR1.drxml",
 		"DR2": "http://www.dr.dk/Tjenester/epglive/epg.DR2.drxml",
@@ -22,6 +17,17 @@ EPG_TV = { "DR1":"http://www.dr.dk/Tjenester/epglive/epg.DR1.drxml",
 		"RAM": "http://www.dr.dk/Tjenester/epglive/epg.DRRamasjang.drxml",
 		"DRK": "http://www.dr.dk/Tjenester/epglive/epg.DRK.drxml"
 		}
+DR_LIVE_STREAMS ={"DR1": [("livedr01astream3", 1000), ("livedr01bstream3", 1000),("livedr01astream2", 500),("livedr01bstream2", 500),("livedr01astream1", 250), ("livedr01bstream1",250)],
+			"DR2": [("livedr02astream3", 1000), ("livedr02bstream3", 1000),("livedr02astream2", 500),("livedr02bstream2", 500), ("livedr02astream1", 250), ("livedr02bstream1",250)],
+			"DRU": [("livedr03astream3", 1000), ("livedr03bstream3", 1000),("livedr03astream2", 500),("livedr03bstream2", 500), ("livedr03astream1", 250), ("livedr03bstream1",250)],
+			"RAM": [("livedr05astream3", 1000), ("livedr05bstream3", 1000),("livedr05astream2", 500),("livedr05bstream2", 500), ("livedr05astream1", 250), ("livedr05bstream1",250)],
+			"DRK": [("livedr04astream3", 1000), ("livedr04bstream3", 1000),("livedr04astream2", 500),("livedr04bstream2", 500), ("livedr04astream1", 250), ("livedr04bstream1",250)]	
+			}
+DR_TITLE_ICONS = {"DR1": ("DR1", "DR1_icon-default.png"),
+				"DR2": ("DR2", "DR2_icon-default.png"),
+				"DRU":	("DR K", "DRK_icon-default.png"),
+				"RAM":	("DR Ramasjang", "DR_RAMASJANG_icon-default.png"),
+				"DRK":	("DR Update", "DR_UPDATE_icon-default.png" )}
 
 HTTP.CacheTime = 3600
 
@@ -104,25 +110,29 @@ def ProgramMenu(sender,id, title):
 	return CreateVideoItem(sender, id=id, title=title, items=JSON.ObjectFromURL(APIURL % "programseries/" + id + "/videos"))
 
 def LiveTVMenu(sender):
-	drRTMP = "rtmp://rtmplive.dr.dk/live"
-	dir = MediaContainer(title1="DR NU - Live TV", title2="Live TV")	
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr01astream3", width=830, height=467, live=True, title="DR1", summary=getTVLiveMetadata("DR1"), thumb=R(ICON_DR1), art=R(ART) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr02astream3", width=830, height=467, live=True, title="DR2", summary=getTVLiveMetadata("DR2"), thumb=R(ICON_DR2), art=R(ART) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr03astream3", width=830, height=467, live=True, title="DR Update", summary=getTVLiveMetadata("DR Update"), thumb=R(ICON_DRU), art=R(ART) ) )
-	dir.Append(RTMPVideoItem(drRTMP, clip="livedr04astream3", width=830, height=467, live=True, title="DR K", summary=getTVLiveMetadata("DR K"), thumb=R(ICON_DRK), art=R(ART) ) )
-	dir.Append(RTMPVideoItem(
-							drRTMP, 
-							clip="livedr05astream3", 
-							width=830, 
-							height=467, 
-							live=True, 
-							title="DR Ramsjang", 
-							summary=getTVLiveMetadata("DR Ramasjang"), 
-							thumb=R(ICON_DRR), 
-							art=R(ART) ) )
-
+	dir = ObjectContainer(title1="title - Live TV", title2="Live TV")
+	#sorted_channels = sortedDictValues(DR_LIVE_STREAMS)
+	keys = DR_LIVE_STREAMS.keys()
+	keys.sort()
+	for channel in keys: 
+		dir.add(LiveTVChannel(channel))
+	
 	return dir
-
+def LiveTVChannel(channelID):
+	drRTMP = "rtmp://rtmplive.dr.dk/live"
+	channelObj = VideoClipObject(url = "http://www.dr.dk/nu/live#%s" % channelID,
+							title = DR_TITLE_ICONS[channelID][0],
+							thumb = R(DR_TITLE_ICONS[channelID][1]),
+							art = R(ART),
+							summary = getTVLiveMetadata(channelID)
+							)
+	for channel in DR_LIVE_STREAMS[channelID]:
+		medObj = MediaObject(protocols = Protocol.RTMP,
+							bitrate = channel[1])
+		po = PartObject(key = RTMPVideoURL(drRTMP, clip = channel[0], live=True, height=467, width=830))
+		medObj.add(po)
+		channelObj.add(medObj)
+	return channelObj
 
 def LiveRadioMenu(sender):
 	drRTMP = "rtmp://live.gss.dr.dk/live/"
@@ -344,9 +354,9 @@ def getTVLiveMetadata(channelID):
 	description_next = ""
 				
 	for channel in channels["channels"]:
-		if channelID in channel['channel'] :
+		if DR_TITLE_ICONS[channelID][0] in channel['channel'] :
 			if channel['current']:
-				if channel['current']['programTitle']:
+				if channel['current']:
 					title_now = L(channel['current']['programTitle'])
 					Log.Debug(title_now)
 				if channel['current']['description']:
@@ -368,4 +378,7 @@ def getTVLiveMetadata(channelID):
 
 
 
-
+def sortedDictValues(adict):
+    items = adict.items()
+    items.sort()
+    return [value for key, value in items]
