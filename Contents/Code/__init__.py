@@ -231,7 +231,7 @@ def CreateVideoItem(sender,id, title, items):
 			else:
 				title = title + " " + subtitle
 
-		if dkOnly && Locale.GeoLocation != "DK":
+		if dkOnly and Locale.Geolocation != "DK":
 			title = title + " [DK Only] " 
 
 		titles.add(title.upper())
