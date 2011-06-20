@@ -64,3 +64,4 @@ def GetVideos(sender,id):
   clip = 'http://vodfiles.dr.dk/' + tempclip[2]
   Log("Showing " + clip)
   return Redirect(clip)
+  #test
