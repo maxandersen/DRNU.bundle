@@ -118,6 +118,7 @@ def LiveTVMenu(sender):
 		dir.add(LiveTVChannel(channel))
 	
 	return dir
+
 def LiveTVChannel(channelID):
 	drRTMP = "rtmp://rtmplive.dr.dk/live"
 	channelObj = VideoClipObject(url = "http://www.dr.dk/nu/live#%s" % channelID,
