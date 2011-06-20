@@ -162,6 +162,8 @@ def LiveRadioP4Menu(sender):
 
 def CreateVideoItem(sender,id, title, items):
 	dir=MediaContainer(title1="DR NU", title2=title)
+
+	titles = set()
 	for item in items:
 		key=APIURL % "videos/" + str(item["id"])
 		thumb=APIURL % "videos/" + str(item["id"]) + "/images/600x600.jpg"
@@ -173,8 +175,12 @@ def CreateVideoItem(sender,id, title, items):
 		else:
 			art=thumb
 
+			
 		if 'spotTitle' in item:
 			title=item["spotTitle"]
+		elif 'name' in item:
+			Log("Name is " + item["name"])
+			title=item["name"]
 		else:
 			title=item["title"]
 
@@ -196,7 +202,7 @@ def CreateVideoItem(sender,id, title, items):
 			elif item['broadcastChannel'] is None and item['formattedBroadcastTime']:
 				subtitle=str(item["formattedBroadcastTime"])
 			else:
-				subtitle=str(item["broadcastChannel"]) + ": " + str(item["formattedBroadcastTime"])
+				subtitle=str(item["formattedBroadcastTime"]) + " on " + str(item["broadcastChannel"])
 			
 			if 'duration' in item:
 				subtitle = subtitle + " ["+ str(item["duration"]) + "]"
@@ -215,18 +221,28 @@ def CreateVideoItem(sender,id, title, items):
 		else:
 			dkOnly = false
 
-		if dkOnly:
-			title = title + " [DK Only]"
+		if "name" in content:  ## this is the case for some entries in TV AVISEN
+			title = content["name"]
 
-			
+		## hack to get repeated shows to show up with dates
+		if title.upper() in titles:
+			if 'formattedBroadcastTime' in item:
+				title = title + " " + str(item['formattedBroadcastTime'])
+			else:
+				title = title + " " + subtitle
+
+		if dkOnly && Locale.GeoLocation != "DK":
+			title = title + " [DK Only] " 
+
+		titles.add(title.upper())
 		# get mp4 first (i.e. Barda only has mp4 and wmv, but no quality)
 		videos = content["links"]
-		videos = [elem for elem in videos if elem["fileType"] == "mp4" ]
+		videos = [elem for elem in videos if elem["fileType"] == "mp4" and elem["linkType"] == "Streaming" ]
 		
 		if not videos:
 			## TODO: figure out a better way to show info about no videos available
-			title = "Not Found: " + title
-			dir.Append(RTMPVideoItem("novideourl", clip="novideofound", live=False, title=title, summary=summary, thumb=thumb))
+			##title = "Not Found: " + title
+			dir.Append(RTMPVideoItem("novideourl", clip="novideofound", live=False, title=title, summary=summary, thumb=thumb,subtitle=subtitle))
 		else:
 			map = dict()
 			for video in videos:
@@ -258,12 +274,12 @@ def CreateVideoItem(sender,id, title, items):
        			if 'width' not in content and 'height' not in content:
 				dir.Append(RTMPVideoItem(baseUrl,
 							 clip=clip,
-							 live=False, title=title, summary=summary, thumb=thumb ))
+							 live=False, title=title, summary=summary, thumb=thumb,subtitle=subtitle ))
 			else:
 				dir.Append(RTMPVideoItem(baseUrl,
 							 clip=clip,
 							 width=content['width'], height=content['height'],
-							 live=False, title=title, summary=summary, thumb=thumb ))
+							 live=False, title=title, summary=summary, thumb=thumb,subtitle=subtitle ))
 	return dir
 
 def NoVideos(sender,id):
