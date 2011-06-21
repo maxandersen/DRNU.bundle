@@ -121,18 +121,49 @@ def LiveTVMenu(sender):
 
 def LiveTVChannel(channelID):
 	drRTMP = "rtmp://rtmplive.dr.dk/live"
-	channelObj = VideoClipObject(url = "http://www.dr.dk/nu/live#%s" % channelID,
+	channelObj = MovieObject(url = "http://www.dr.dk/nu/live#%s" % channelID,
 							title = DR_TITLE_ICONS[channelID][0],
 							thumb = R(DR_TITLE_ICONS[channelID][1]),
 							art = R(ART),
 							summary = getTVLiveMetadata(channelID)
 							)
-	for channel in DR_LIVE_STREAMS[channelID]:
-		medObj = MediaObject(protocols = Protocol.RTMP,
-							bitrate = channel[1])
-		po = PartObject(key = RTMPVideoURL(drRTMP, clip = channel[0], live=True, height=467, width=830))
-		medObj.add(po)
-		channelObj.add(medObj)
+	if Prefs['quality'] == "auto":
+		for channel in DR_LIVE_STREAMS[channelID]:
+			medObj = MediaObject(protocols = Protocol.RTMP,
+								bitrate = channel[1],
+								audio_channels = 2)
+			po = PartObject(key = RTMPVideoURL(drRTMP, clip = channel[0], live=True, height=467, width=830))
+			medObj.add(po)
+			channelObj.add(medObj)
+	else:
+		channel = DR_LIVE_STREAMS[channelID]
+		if Prefs['quality'] == "high":
+			singleBandwidth = 1000
+			clip1 = channel[0][0]
+			clip2 = channel[1][0]
+		if Prefs['quality'] == "medium":
+			singleBandwidth = 500
+			clip1 = channel[2][0]
+			clip2 = channel[3][0]
+		if Prefs['quality'] == "low":
+			clip1 = channel[4][0]
+			clip2 = channel[5][0]
+			singleBandwidth = 250
+		medObj1 = MediaObject(protocols = Protocol.RTMP,
+							bitrate = singleBandwidth,
+							audio_channels = 2,
+							
+							)
+		medObj2 = MediaObject(protocols = Protocol.RTMP,
+							bitrate = singleBandwidth,
+							audio_channels = 2
+							)
+		po1 = PartObject(key = RTMPVideoURL(drRTMP, clip = clip1, live = True, height = 467, width = 830))
+		po2 = PartObject(key = RTMPVideoURL(drRTMP, clip = clip2, live = True, height = 467, width = 830))
+		medObj1.add(po1)
+		medObj2.add(po2)
+		channelObj.add(medObj1)
+		channelObj.add(medObj2)
 	return channelObj
 
 def LiveRadioMenu(sender):
