@@ -334,7 +334,7 @@ def CreateVideoItem(items, title):
 				
 				if 'bitrateKbps' in video:
 					mo.bitrate = video['bitrateKbps']
-				if mo.bitrate > throtle:
+				if mo.bitrate < throtle:
 					if 'height' in video:
 						height = video['height']
 					else:
