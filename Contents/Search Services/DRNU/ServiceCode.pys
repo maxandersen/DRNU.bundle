@@ -1,67 +1,71 @@
+import time
+import datetime
+
 def Search(query):
-  # Compute the URL and download the JSON
   url = 'http://www.dr.dk/nu/api/search/%s' % String.Quote(query)
   items = JSON.ObjectFromURL(url)
   
-  # Create a container to hold the results
   c = ObjectContainer()
   for item in items:
-    try: 
-    	key=APIURL % "videos/" + str(item["id"])
-        thumb=APIURL % "videos/" + str(item["id"]) + "/images/300x400.jpg"
-        if 'imagePath' in item:
-			art="http://dr.dk/nu" + item["imagePath"]
-        elif 'programSerieSlug' in item:
-			art="http://dr.dk/nu/api/programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
-        else:
-			art=thumb
-
-        if 'spotTitle' in item:
-			title=item["spotTitle"]
-        else:
-			title=item["title"]
-        if 'isPremiere' in item:
-			isPremiere = item["isPremiere"]
-        elif 'premiere' in item:
-			isPremiere = item['premiere']
-        
-        if isPremiere:
-			title = title + " *PREMIERE* "
-			
-        if 'spotSubTitle' in item:
-			summary=item["spotSubTitle"]
-			subtitle=None
-        else:
-			summary=item["description"]
-			subtitle=item["broadcastChannel"] + ": " + item["formattedBroadcastTime"]
-			if 'duration' in item:
-				subtitle = subtitle + " ["+ item["duration"] + "]"
-            
-        if 'videoResourceUrl' in item:
-            video=item["videoResourceUrl"]
-        else:
-            video =JSON.ObjectFromURL(key)["videoResourceUrl"]
-		
-                ## Log("title=" + str(title) + ", subtitle=" + str(subtitle) + ", thumb=" + str(thumb) + ", summary=" + str(summary) + ", id=" + str(video)) 
-	c.Append(Function(VideoItem(GetVideos, title=title,subtitle=subtitle, summary=summary, art=art, thumb=thumb), id=video))     
-    
-    except:
-      Log.Exception("Exception adding video result")
+      video = JSON.ObjectFromURL("http://www.dr.dk/nu/api/videos/%s" % item['id'])
+      links = JSON.ObjectFromURL(video['videoResourceUrl'])
+      durationSplit = video['duration'].split(':')
       
+      vco = VideoClipObject()
+      vco.key = video['videoManifestUrl']
+      vco.title = video['title']
+      vco.summary =  video['description']
+      vco.thumb = "http://www.dr.dk/nu/api/videos/%s/images/320x180.jpg" % item['id']
+      vco.duration = ((int(durationSplit[2]))+(int(durationSplit[1])*60)+(int(durationSplit[0])*3600))*1000
+      if video['broadcastChannel'] != "Empty":
+          vco.source_title = video['broadcastChannel']
+      else:
+          vco.source_title = "DR"
+      vco.studio = "Danmarks Radio"
+      
+      if len(links['links'])>0:
+                            
+          for link in links['links']:
+              splitUri = link['uri'].split(':')
+              mo = MediaObject()
+              if splitUri[0] is 'rtmp':
+                  mo.protocols = Protocol.RTMP
+              if link['bitrateKbps']:
+                  mo.bitrate = link['bitrateKbps']
+              mo.aspect_ratio = 16/9
+              if link['fileType'] is 'mp4':
+                  mo.container = Container.MP4
+              mo.duration = vco.duration
+              
+              if 'height' in link:
+                  height = link['height']
+              else:
+                  height = None
+              if 'width' in link:
+                  width = link['width']
+              else:
+                  width = None
+
+              if splitUri[0] == 'rtmp':
+                po = PartObject(key = RTMPVideoURL("rtmp://vod.dr.dk/cms/", clip="mp4:" + splitUri[2], width=width, height=height, live=False))
+                mo.add(po)
+              elif splitUri[0] == "mms":
+                  po = PartObject( key = WindowsMediaVideoURL(link['uri'], width=width, height=height))
+                  mo.add(po)
+              elif splitUri[0] == "http":
+                  po = PartObject(key = link['uri'])
+                  mo.add(po)
+              
+                  
+              vco.add(mo)
+      else:
+          vco.url = video['VideoManifestUrl']
+          
+            
+      c.add(vco)
+          
   return c
-  
-def GetVideos(sender,id):
-  content = JSON.ObjectFromURL(id)
-  
-  map = dict()
-  for video in content["links"]:
-      quality=int(video["bitrateKbps"])
-      uri = video["uri"]
-      map[quality] = uri
-  Log("quality: " + str(map))
-  bestUri = map[sorted(map)[0]]
-  tempclip = bestUri.split(":")
-  clip = 'http://vodfiles.dr.dk/' + tempclip[2]
-  Log("Showing " + clip)
-  return Redirect(clip)
-  #test
+
+        
+        
+        

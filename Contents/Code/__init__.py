@@ -5,11 +5,13 @@ VIDEO_PREFIX = "/video/drnu"
 MUSIC_PREFIX = "/music/drnu"
 
 APIURL = "http://www.dr.dk/NU/api/%s"
+APIURL_RADIO = "http://www.dr.dk/tjenester/nuradio/api/api/%s"
 RADIO_NOWNEXT_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/programInfo.drxml?channelId=%s"
 RADIO_TRACKS_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/trackInfo.drxml?channelId=%s"
 NAME  = "DR NU"
 ART   = 'art-default.jpg'
 ICON  = 'DR_icon-default.png'
+BETATAG = " [ BETA ]"
 
 EPG_TV = { "DR1":"http://www.dr.dk/Tjenester/epglive/epg.DR1.drxml",
 		"DR2": "http://www.dr.dk/Tjenester/epglive/epg.DR2.drxml",
@@ -76,7 +78,7 @@ def Start():
 
 def VideoMainMenu():
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = "TV", art = R(ART))
-	dir.add(DirectoryObject(title = "Live TV", summary = "Se Live TV", art = R(ART), key = Callback(LiveTV)))
+	dir.add(DirectoryObject(title = "Live TV", summary = "Se Live TV", art = R(ART), thumb=R(ICON), key = Callback(LiveTV)))
 	dir.add(DirectoryObject(title = "Programmer", summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenu,id = None, title = "Programmer")))
 	dir.add(DirectoryObject(title = "Nyeste", summary = "De nyeste videos", thumb = R(ICON), art = R(ART), key = Callback(CreateVideoItem, items=JSON.ObjectFromURL(APIURL % "videos/newest.json"), title = "Nyeste")))
 	dir.add(DirectoryObject(title = "Spot", summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(CreateVideoItem, title="Spot", items=JSON.ObjectFromURL(APIURL % "videos/spot.json"))))
@@ -89,7 +91,11 @@ def VideoMainMenu():
 def MusicMainMenu():
 	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = "Radio", art = R(ART))
 	dir.add(DirectoryObject(title = "Live Radio", summary = "Lyt til Live Radio", art = R(ART), thumb = R(ICON), key = Callback(LiveRadioMenu)))
-	dir.add(DirectoryObject(title = "TV", summary = "Lyt til radio", art = R(ART), thumb = R(ICON), key = Callback(VideoMainMenu)))
+	dir.add(DirectoryObject(title = "Programmer" + BETATAG, summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenuRadio,id = None, title = "Programmer")))
+	dir.add(DirectoryObject(title = "Nyeste" + BETATAG, summary = "De nyeste radioudsendelser", thumb = R(ICON), art = R(ART), key = Callback(CreateRadioItem, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/newest.json"), title = "Nyeste")))
+	dir.add(DirectoryObject(title = "Spot" + BETATAG, summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(CreateRadioItem, title="Spot", items=JSON.ObjectFromURL(APIURL_RADIO % "videos/spot.json"))))
+	dir.add(DirectoryObject(title = "Mest sete" + BETATAG, summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(CreateRadioItem, title="Mest sete", items=JSON.ObjectFromURL(APIURL_RADIO % "videos/mostviewed.json"))))
+	dir.add(DirectoryObject(title = "TV", summary = "Se TV", art = R(ART), thumb = R(ICON), key = Callback(VideoMainMenu)))
 	dir.add(PrefsObject(title = "Indstillinger...", summary="Indstil DR NU plug-in", thumb = R(ICON), art = R(ART)))
 	return dir
 
@@ -193,7 +199,7 @@ def LiveTV():
 
 def ProgramSerierMenu(id,title):
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title )
-	JSONObject=JSON.ObjectFromURL(APIURL % "programseries.json")
+	JSONObject=JSON.ObjectFromURL(APIURL_RADIO % "programseries.json")
 
 	bucket = dict()
 	letter = ''
@@ -255,7 +261,7 @@ def CreateVideoItem(items, title):
 		if 'imagePath' in item:
 			art="http://dr.dk/nu" + item["imagePath"]
 		elif 'programSerieSlug' in item:
-			art="http://dr.dk/nu/api/programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
+			art= APIURL % "programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
 		else:
 			art=thumb
 
@@ -351,7 +357,7 @@ def CreateVideoItem(items, title):
 						po = PartObject(key = RTMPVideoURL(baseUrl, clip = clip, height = height, width = width, live = False))
 						#Log.Debug("Adding WM PO - key: " + po.key)
 					elif video['fileType'] == "wmv":
-						po = PartObject(key = WindowsMediaVideoURL(video[uri], height = height, width = width))
+						po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
 					else:
 						po = PartObject(key = video['uri'])
 					mo.add(po)
@@ -435,3 +441,173 @@ def getTVLiveMetadata(channelID):
 	title = "Nu: " + title_now + "\n" + description_now  + "\n\nNaeste: " + title_next + "\n" + description_next
 			
 	return str(title)
+
+def ProgramSerierMenuRadio(id,title):
+	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title )
+	JSONObject=JSON.ObjectFromURL(APIURL_RADIO % "programseries.json")
+
+	bucket = dict()
+	letter = ''
+	for program in JSONObject:
+		slug=program["slug"]
+		title=program["title"]
+		if program["videoCount"] > 1:
+			title = title + " (" + str(program["videoCount"]) + " afs.)"
+		subtitle=", ".join(program["labels"])
+		
+		summary=program["description"]
+		thumb=APIURL % "programseries/" + slug + "/images/512x512.jpg"
+
+		letter = title[0].upper()
+		if letter not in bucket:
+			bucket[letter] = list()
+		tuple = dict(title=title,subtitle=subtitle,thumb=thumb,summary=summary,id=slug)
+		bucket[letter].append(tuple)
+
+	for firstChar in sorted(bucket.iterkeys()):
+		serier = bucket[firstChar]
+		if Prefs['group_per_letter']:
+			dir.add(DirectoryObject(title = firstChar, 
+								art = R(ART), 
+								thumb = R(ICON), 
+								key = Callback(LetterMenuRadio, 
+											title = firstChar, 
+											serier = serier )))
+		
+		else:
+			for serie in serier:
+				dir.add(DirectoryObject(title = serie['title'], 
+									tagline = serie['subtitle'], 
+									summary = serie['summary'], 
+									art = R(ART), 
+									thumb = thumb, 
+									key = Callback(CreateRadioItem, 
+												items = JSON.ObjectFromURL(APIURL_RADIO % "programseries/"+serie['id'] + "/videos"),
+												title = serie['title'])))
+			
+	return dir
+
+def LetterMenuRadio(title, serier):
+	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = title)
+	for serie in serier:
+		JSONobj = JSON.ObjectFromURL(APIURL_RADIO % "Programseries/" + serie['id'] + "/videos")
+		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL_RADIO % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateRadioItem, items = JSONobj, title = serie['title'])))
+	return dir
+
+		
+def CreateRadioItem(items, title):
+	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title)
+
+	titles = set()
+	for item in items:
+		key=APIURL_RADIO % "videos/" + str(item["id"])
+		thumb=APIURL_RADIO % "videos/" + str(item["id"]) + "/images/512x512.jpg"
+
+		if 'imagePath' in item:
+			art="http://dr.dk/nu" + item["imagePath"]
+		elif 'programSerieSlug' in item:
+			art= APIURL_RADIO % "programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
+		else:
+			art=thumb
+
+			
+		if 'spotTitle' in item:
+			title=item["spotTitle"]
+		elif 'name' in item:
+			title=item["name"]
+		else:
+			title=item["title"]
+
+		if 'isPremiere' in item:
+			isPremiere = item["isPremiere"]
+		elif 'premiere' in item:
+			isPremiere = item['premiere']
+
+		if isPremiere:
+			title = title + " *PREMIERE* "
+			
+		if 'spotSubTitle' in item:
+			summary=item["spotSubTitle"]
+			subtitle=None
+		else:
+			summary=item["description"]
+			if item['broadcastChannel'] and item['formattedBroadcastTime'] is None:
+				subtitle=item["broadcastChannel"]
+			elif item['broadcastChannel'] is None and item['formattedBroadcastTime']:
+				subtitle=str(item["formattedBroadcastTime"])
+			else:
+				subtitle=str(item["formattedBroadcastTime"]) + " on " + str(item["broadcastChannel"])
+			
+			if 'duration' in item:
+				subtitle = subtitle + " ["+ str(item["duration"]) + "]"
+
+		if 'videoResourceUrl' in item:
+			JSONvideoUrl=item["videoResourceUrl"]
+		else:
+			JSONvideoUrl = str(JSON.ObjectFromURL(key)["videoResourceUrl"])
+
+		content = JSON.ObjectFromURL(JSONvideoUrl)
+
+		if 'restrictedToDenmark' in content:
+			dkOnly = content['restrictedToDenmark']
+		else:
+			dkOnly = false
+
+		if "name" in content:  ## this is the case for some entries in TV AVISEN
+			title = content["name"]
+
+		## hack to get repeated shows to show up with dates
+		if title.upper() in titles:
+			if 'formattedBroadcastTime' in item:
+				title = title + " " + str(item['formattedBroadcastTime'])
+			else:
+				title = title + " " + subtitle
+
+		if dkOnly and Locale.Geolocation != "DK":
+			title = title + " [DK Only] " 
+
+		titles.add(title.upper())
+		
+		## New video adding
+		
+		if Prefs['quality'] == "low":
+			throtle = 500
+		elif Prefs['quality'] == "medium":
+			throtle = 1000
+		else:
+			throtle = 20000
+		
+		
+		vco = VideoClipObject(title = title, summary = summary, thumb = thumb, key = key)
+		if len(content['links'])>0:
+			for video in content['links']:
+				mo = MediaObject()
+				
+				if 'bitrateKbps' in video:
+					mo.bitrate = video['bitrateKbps']
+				if mo.bitrate < throtle:
+					if 'height' in video:
+						height = video['height']
+					else:
+						height = None
+						
+					if 'width' in video:
+						width = video['width']
+					else:
+						width = None 
+	
+#					if video['fileType'] == "mp4":
+#						baseUrl = "rtmp://vod.dr.dk/cms/"
+#						clip = "mp4:" + video["uri"].split(":")[2]
+#						po = PartObject(key = RTMPVideoURL(baseUrl, clip = clip, height = height, width = width, live = False))
+						#Log.Debug("Adding WM PO - key: " + po.key)
+					if video['fileType'] == "wma":
+						po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
+					else:
+						po = PartObject(key = video['uri'])
+					mo.add(po)
+					vco.add(mo)
+		else:
+			vco.add(MediaObject(parts = [PartObject(key = JSON.ObjectFromURL(key)["videoManifestUrl"])]))
+		dir.add(vco)
+	return dir
