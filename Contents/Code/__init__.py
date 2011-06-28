@@ -10,7 +10,7 @@ RADIO_NOWNEXT_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/programInf
 RADIO_TRACKS_URL = "http://www.dr.dk/tjenester/LiveNetRadio/datafeed/trackInfo.drxml?channelId=%s"
 NAME  = "DR NU"
 ART   = 'art-default.jpg'
-ICON  = 'DR_icon-default.png'
+ICON  = 'icon-default.png'
 BETATAG = " [ BETA ]"
 
 EPG_TV = { "DR1":"http://www.dr.dk/Tjenester/epglive/epg.DR1.drxml",
