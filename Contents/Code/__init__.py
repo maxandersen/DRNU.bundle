@@ -80,11 +80,12 @@ def VideoMainMenu():
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = "TV", art = R(ART))
 	dir.add(DirectoryObject(title = "Live TV", summary = "Se Live TV", art = R(ART), thumb=R(ICON), key = Callback(LiveTV)))
 	dir.add(DirectoryObject(title = "Programmer", summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenu,id = None, title = "Programmer")))
-	dir.add(DirectoryObject(title = "Nyeste", summary = "De nyeste videos", thumb = R(ICON), art = R(ART), key = Callback(CreateVideoItem, items=JSON.ObjectFromURL(APIURL % "videos/newest.json"), title = "Nyeste")))
-	dir.add(DirectoryObject(title = "Spot", summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(CreateVideoItem, title="Spot", items=JSON.ObjectFromURL(APIURL % "videos/spot.json"))))
-	dir.add(DirectoryObject(title = "Mest sete", summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(CreateVideoItem, title="Mest sete", items=JSON.ObjectFromURL(APIURL % "videos/mostviewed.json"))))
+	dir.add(DirectoryObject(title = "Nyeste", summary = "De nyeste videos", thumb = R(ICON), art = R(ART), key = Callback(NewestMenu, id=None, title = "Nyeste")))
+	dir.add(DirectoryObject(title = "Spot", summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(SpotMenu, title="Spot", id = None)))
+	dir.add(DirectoryObject(title = "Mest sete", summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(MostViewedMenu, title="Mest sete", id = None)))
 	dir.add(DirectoryObject(title = "Radio", summary = "Lyt til radio", art = R(ART), thumb = R(ICON), key = Callback(MusicMainMenu)))
 	dir.add(PrefsObject(title = "Indstillinger...", summary="Indstil DR NU plug-in", thumb = R(ICON), art = R(ART)))
+	
 	return dir
 
 
@@ -92,12 +93,14 @@ def MusicMainMenu():
 	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = "Radio", art = R(ART))
 	dir.add(DirectoryObject(title = "Live Radio", summary = "Lyt til Live Radio", art = R(ART), thumb = R(ICON), key = Callback(LiveRadioMenu)))
 	dir.add(DirectoryObject(title = "Programmer" + BETATAG, summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenuRadio,id = None, title = "Programmer")))
-	dir.add(DirectoryObject(title = "Nyeste" + BETATAG, summary = "De nyeste radioudsendelser", thumb = R(ICON), art = R(ART), key = Callback(CreateRadioItem, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/newest.json"), title = "Nyeste")))
-	dir.add(DirectoryObject(title = "Spot" + BETATAG, summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(CreateRadioItem, title="Spot", items=JSON.ObjectFromURL(APIURL_RADIO % "videos/spot.json"))))
-	dir.add(DirectoryObject(title = "Mest sete" + BETATAG, summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(CreateRadioItem, title="Mest sete", items=JSON.ObjectFromURL(APIURL_RADIO % "videos/mostviewed.json"))))
+	dir.add(DirectoryObject(title = "Nyeste" + BETATAG, summary = "De nyeste radioudsendelser", thumb = R(ICON), art = R(ART), key = Callback(NewestMenuRadio, title = "Nyeste"), id = None))
+	dir.add(DirectoryObject(title = "Spot" + BETATAG, summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(SpotMenuRadio, title="Spot", id = None)))
+	dir.add(DirectoryObject(title = "Mest sete" + BETATAG, summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(MostViewedMenuRadio, title="Mest sete", id = None)))
 	dir.add(DirectoryObject(title = "TV", summary = "Se TV", art = R(ART), thumb = R(ICON), key = Callback(VideoMainMenu)))
 	dir.add(PrefsObject(title = "Indstillinger...", summary="Indstil DR NU plug-in", thumb = R(ICON), art = R(ART)))
 	return dir
+
+
 
 def LiveRadioMenu():
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = "Live Radio", art = R(ART))
@@ -236,9 +239,10 @@ def ProgramSerierMenu(id,title):
 									summary = serie['summary'], 
 									art = R(ART), 
 									thumb = thumb, 
-									key = Callback(CreateVideoItem, 
-												items = JSON.ObjectFromURL(APIURL % "programseries/"+serie['id'] + "/videos"),
-												title = serie['title'])))
+									#key = Callback(CreateVideoItem, 
+												#items = JSON.ObjectFromURL(APIURL % "programseries/"+serie['id'] + "/videos"),
+									#			title = serie['title'])))
+									key = Callback(ProgramMenu, id = serie['id'], title = serie['title'])))
 			
 	return dir
 
@@ -249,14 +253,28 @@ def LetterMenu(title, serier):
 		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateVideoItem, items = JSONobj, title = serie['title'])))
 	return dir
 
+def NewestMenu(id, title):
+        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL % "videos/newest.json"))
+
+def MostViewedMenu(id, title):
+        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL % "videos/mostviewed.json"))
+
+def SpotMenu(id, title):
+        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL % "videos/spot.json"))
+
+def ProgramMenu(id, title):
+	return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL % "programseries/" + id + "/videos"))
+
+
+
 		
-def CreateVideoItem(items, title):
+def CreateVideoItem(id, items, title):
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title)
 
 	titles = set()
 	for item in items:
-		key=APIURL % "videos/" + str(item["id"])
-		thumb=APIURL % "videos/" + str(item["id"]) + "/images/512x512.jpg"
+		key=APIURL % "videos/" + str(item['id'])
+		thumb=APIURL % "videos/" + str(item['id']) + "/images/512x512.jpg"
 
 		if 'imagePath' in item:
 			art="http://dr.dk/nu" + item["imagePath"]
@@ -299,6 +317,7 @@ def CreateVideoItem(items, title):
 		if 'videoResourceUrl' in item:
 			JSONvideoUrl=item["videoResourceUrl"]
 		else:
+			Log.Debug(key)
 			JSONvideoUrl = str(JSON.ObjectFromURL(key)["videoResourceUrl"])
 
 		content = JSON.ObjectFromURL(JSONvideoUrl)
@@ -494,14 +513,27 @@ def LetterMenuRadio(title, serier):
 		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL_RADIO % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateRadioItem, items = JSONobj, title = serie['title'])))
 	return dir
 
+def NewestMenuRadio(id, title):
+        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/newest.json"))
+
+def MostViewedMenuRadio(id, title):
+        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/mostviewed.json"))
+
+def SpotMenuRadio(id, title):
+        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/spot.json"))
+
+def ProgramMenuRadio(id, title):
+	return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "programseries/" + id + "/videos"))
+
+
 		
-def CreateRadioItem(items, title):
+def CreateRadioItem(id, items, title):
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title)
 
 	titles = set()
 	for item in items:
-		key=APIURL_RADIO % "videos/" + str(item["id"])
-		thumb=APIURL_RADIO % "videos/" + str(item["id"]) + "/images/512x512.jpg"
+		key=APIURL_RADIO % "videos/" + str(item['id'])
+		thumb=APIURL_RADIO % "videos/" + str(item['id']) + "/images/512x512.jpg"
 
 		if 'imagePath' in item:
 			art="http://dr.dk/nu" + item["imagePath"]
