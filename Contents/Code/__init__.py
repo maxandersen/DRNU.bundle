@@ -93,9 +93,9 @@ def MusicMainMenu():
 	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = "Radio", art = R(ART))
 	dir.add(DirectoryObject(title = "Live Radio", summary = "Lyt til Live Radio", art = R(ART), thumb = R(ICON), key = Callback(LiveRadioMenu)))
 	dir.add(DirectoryObject(title = "Programmer" + BETATAG, summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenuRadio,id = None, title = "Programmer")))
-	dir.add(DirectoryObject(title = "Nyeste" + BETATAG, summary = "De nyeste radioudsendelser", thumb = R(ICON), art = R(ART), key = Callback(NewestMenuRadio, title = "Nyeste"), id = None))
+	dir.add(DirectoryObject(title = "Nyeste" + BETATAG, summary = "De nyeste radioudsendelser", thumb = R(ICON), art = R(ART), key = Callback(NewestMenuRadio, title = "Nyeste", id = None)))
 	dir.add(DirectoryObject(title = "Spot" + BETATAG, summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(SpotMenuRadio, title="Spot", id = None)))
-	dir.add(DirectoryObject(title = "Mest sete" + BETATAG, summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(MostViewedMenuRadio, title="Mest sete", id = None)))
+	dir.add(DirectoryObject(title = "Mest hørte" + BETATAG, summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(MostViewedMenuRadio, title="Mest sete", id = None)))
 	dir.add(DirectoryObject(title = "TV", summary = "Se TV", art = R(ART), thumb = R(ICON), key = Callback(VideoMainMenu)))
 	dir.add(PrefsObject(title = "Indstillinger...", summary="Indstil DR NU plug-in", thumb = R(ICON), art = R(ART)))
 	return dir
@@ -215,6 +215,7 @@ def ProgramSerierMenu(id,title):
 		
 		summary=program["description"]
 		thumb=APIURL % "programseries/" + slug + "/images/512x512.jpg"
+		Log.Debug(thumb)
 
 		letter = title[0].upper()
 		if letter not in bucket:
@@ -230,7 +231,8 @@ def ProgramSerierMenu(id,title):
 								thumb = R(ICON), 
 								key = Callback(LetterMenu, 
 											title = firstChar, 
-											serier = serier )))
+											serier = serier
+											 )))
 		
 		else:
 			for serie in serier:
@@ -250,7 +252,7 @@ def LetterMenu(title, serier):
 	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = title)
 	for serie in serier:
 		JSONobj = JSON.ObjectFromURL(APIURL % "Programseries/" + serie['id'] + "/videos")
-		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateVideoItem, items = JSONobj, title = serie['title'])))
+		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateVideoItem, items = JSONobj, title = serie['title'], id = serie['id'])))
 	return dir
 
 def NewestMenu(id, title):
@@ -263,6 +265,7 @@ def SpotMenu(id, title):
         return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL % "videos/spot.json"))
 
 def ProgramMenu(id, title):
+	Log.Debug(str(id))
 	return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL % "programseries/" + id + "/videos"))
 
 
