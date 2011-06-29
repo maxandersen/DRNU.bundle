@@ -199,7 +199,7 @@ def LiveTV():
 
 def ProgramSerierMenu(id,title):
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title )
-	JSONObject=JSON.ObjectFromURL(APIURL_RADIO % "programseries.json")
+	JSONObject=JSON.ObjectFromURL(APIURL % "programseries.json")
 
 	bucket = dict()
 	letter = ''
