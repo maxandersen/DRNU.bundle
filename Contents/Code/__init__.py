@@ -19,50 +19,27 @@ EPG_TV = { "DR1":"http://www.dr.dk/Tjenester/epglive/epg.DR1.drxml",
 		"RAM": "http://www.dr.dk/Tjenester/epglive/epg.DRRamasjang.drxml",
 		"DRK": "http://www.dr.dk/Tjenester/epglive/epg.DRK.drxml"
 		}
-DR_LIVE_STREAMS ={"DR1": [("livedr01astream3", 1000), ("livedr01bstream3", 1000),("livedr01astream2", 500),("livedr01bstream2", 500),("livedr01astream1", 250), ("livedr01bstream1",250)],
-			"DR2": [("livedr02astream3", 1000), ("livedr02bstream3", 1000),("livedr02astream2", 500),("livedr02bstream2", 500), ("livedr02astream1", 250), ("livedr02bstream1",250)],
-			"DRU": [("livedr03astream3", 1000), ("livedr03bstream3", 1000),("livedr03astream2", 500),("livedr03bstream2", 500), ("livedr03astream1", 250), ("livedr03bstream1",250)],
-			"RAM": [("livedr05astream3", 1000), ("livedr05bstream3", 1000),("livedr05astream2", 500),("livedr05bstream2", 500), ("livedr05astream1", 250), ("livedr05bstream1",250)],
-			"DRK": [("livedr04astream3", 1000), ("livedr04bstream3", 1000),("livedr04astream2", 500),("livedr04bstream2", 500), ("livedr04astream1", 250), ("livedr04bstream1",250)]	
-			}
-DR_LIVE_RADIO_STREAMS = {"P1": ["P1", "P1", [("Channel3_HQ", 192),("Channel3_LQ", 64)]],
-					"P2": ["P2", "P2", [("Channel4_HQ", 192),("Channel4_LQ", 64)]],
-					"P3": ["P3", "P3", [("Channel5_HQ", 192),("Channel5_LQ", 64)]],
-					"P4": [{"KH4": ["P4 København", "KH4", [("Channel8_HQ", 192),("Channel8_LQ", 64)]],
-						"NV4": ["P4 Sjælland", "NV4", [("Channel11_HQ", 192),("Channel11_LQ", 64)]],
-						"AAR4": ["P4 Østjylland", None, [("Channel14_HQ", 192),("Channel14_LQ", 64)]],
-						"AAB4": ["P4 Syd", None, [("Channel12_HQ", 192),("Channel12_LQ", 64)]],
-						"OD4": ["P4 Fyn", "OD4", [("Channel7_HQ", 192),("Channel7_LQ", 64)]],
-						"AAL4": ["P4 Nordjylland", None, [("Channel10_HQ", 192),("Channel10_LQ", 64)]],
-						"HO4": ["P4 Midt & Vest", "HO4", [("Channel9_HQ", 192),("Channel9_LQ", 64)]],
-						"TR4": ["P4 Trekanten", "TR4", [("Channel13_HQ", 192),("Channel13_LQ", 64)]],
-						"ROE4": ["P4 Bornholm", None, [("Channel6_HQ", 192),("Channel6_LQ", 64)]],
-						"ES4": ["P4 Esbjerg", "ES4", [("Channel15_HQ", 192),("Channel15_LQ", 64)]],
-						"NS4": ["P4 NordvestSjælland", "NS4", [("Channel11_HQ", 192),("Channel11_LQ", 64)]]
-						}],
-					"P5": ["DR P5", "P5D", [("Channel25_HQ", 192),("Channel25_LQ", 64)]],
-					"P6": ["DR P6 Beat", "P6B", [("Channe29_HQ", 192),("Channe29_LQ", 64)]],
-					"P7": ["DR P7 Mix", "P7M", [("Channel21_HQ", 192),("Channel21_LQ", 64)]],
-					"RAM": ["DR Ramasjang Radio", "RAM", [("Channel24_HQ", 192),("Channel24_LQ", 64)]],
-					"ROB": ["DR R&B", "ROB", [("Channel26_HQ", 192),("Channel26_LQ", 64)]],
-					"SK1": ["DR Boogieradio", "SK1", [("Channel18_HQ", 192),("Channel18_LQ", 64)]],
-					"DAN": ["DR Dansktop", "DAN", [("Channel19_HQ", 192),("Channel19_LQ", 64)]],
-					"JAZ": ["DR Jazz", "JAZ", [("Channel22_HQ", 192),("Channel22_LQ", 64)]],
-					"DAB": ["DR Klassisk", "DAB", [("Channe23_HQ", 192),("Channel23_LQ", 64)]],
-					"NEWS": ["DR Nyheder", "NEWS", [("Channel2_HQ", 192),("Channel2_LQ", 64)]]
-					}
+DR_LIVE_RADIO_STREAMS = "http://www.dr.dk/LiveNetRadio/datafeed/channels.js.drxml?v=2.2"
 DR_LIVE_RADIO_STREAMS_ORDER = ("P1","P2","P3", "P4", "P5","P6","P7","RAM","ROB","SK1","DAN","JAZ","DAB","NEWS")
-DR_LIVE_RADIOP4_STREAM_ORDER = ("KH4","NV4","AAR4","AAB4","OD4","AAL4","HO4","TR4","ROE4","ES4","NS4")
+DR_LIVE_RADIOP4_STREAM_ORDER = ("KH4","NV4","ÅR4","ÅB4","OD4","ÅL4","HO4","TR4","RØ4","ES4","NS4")
 
 DR_TITLE_ICONS = {"DR1": ("DR1", "DR1_icon-default.png"),
 				"DR2": ("DR2", "DR2_icon-default.png"),
-				"DRU":	("DR K", "DRK_icon-default.png"),
-				"RAM":	("DR Ramasjang", "DR_RAMASJANG_icon-default.png"),
-				"DRK":	("DR Update", "DR_UPDATE_icon-default.png" )}
+				"DR K":	("DR K", "DRK_icon-default.png"),
+				"DR Ramasjang":	("DR Ramasjang", "DR_RAMASJANG_icon-default.png"),
+				"DR Update":	("DR Update", "DR_UPDATE_icon-default.png" )}
 DR_LIVE_SORTORDER = ["DR1","DR2","DRU","RAM","DRK"]
-LIVE_RADIO_SERVERS = ("rtmp://live.gss.dr.dk/live/", "rtmp://live-rtmpt.gss.dr.dk:80/live/")
 
 HTTP.CacheTime = 3600
+
+THROTTLE = {"low": 250,
+		"medium": 500,
+		"high": 1000,
+		"auto": 10000}
+RADIO_QINDEX = {"low": 64,
+			"medium": 128,
+			"high": 192,
+			"auto": 10000}
 
 ####################################################################################################
 
@@ -79,7 +56,7 @@ def Start():
 def VideoMainMenu():
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = "TV", art = R(ART))
 	dir.add(DirectoryObject(title = "Live TV", summary = "Se Live TV", art = R(ART), thumb=R(ICON), key = Callback(LiveTV)))
-	dir.add(DirectoryObject(title = "Programmer", summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenu,id = None, title = "Programmer")))
+	dir.add(DirectoryObject(title = "Programmer", summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenu,title = "Programmer")))
 	dir.add(DirectoryObject(title = "Nyeste", summary = "De nyeste videos", thumb = R(ICON), art = R(ART), key = Callback(NewestMenu, id=None, title = "Nyeste")))
 	dir.add(DirectoryObject(title = "Spot", summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(SpotMenu, title="Spot", id = None)))
 	dir.add(DirectoryObject(title = "Mest sete", summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(MostViewedMenu, title="Mest sete", id = None)))
@@ -92,10 +69,10 @@ def VideoMainMenu():
 def MusicMainMenu():
 	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = "Radio", art = R(ART))
 	dir.add(DirectoryObject(title = "Live Radio", summary = "Lyt til Live Radio", art = R(ART), thumb = R(ICON), key = Callback(LiveRadioMenu)))
-	dir.add(DirectoryObject(title = "Programmer" + BETATAG, summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenuRadio,id = None, title = "Programmer")))
+	dir.add(DirectoryObject(title = "Programmer" + BETATAG, summary = "Alle Programserier", art = R(ART), thumb = R(ICON), key = Callback(ProgramSerierMenuRadio, title = "Programmer")))
 	dir.add(DirectoryObject(title = "Nyeste" + BETATAG, summary = "De nyeste radioudsendelser", thumb = R(ICON), art = R(ART), key = Callback(NewestMenuRadio, title = "Nyeste", id = None)))
 	dir.add(DirectoryObject(title = "Spot" + BETATAG, summary = "Spot light", thumb = R(ICON), art = R(ART), key = Callback(SpotMenuRadio, title="Spot", id = None)))
-	dir.add(DirectoryObject(title = "Mest hørte" + BETATAG, summary = "Mest sete", art = R(ART), thumb = R(ICON),key = Callback(MostViewedMenuRadio, title="Mest sete", id = None)))
+	dir.add(DirectoryObject(title = "Mest lyttede" + BETATAG, summary = "Mest lyttede", art = R(ART), thumb = R(ICON),key = Callback(MostViewedMenuRadio, title="Mest lyttede", id = None)))
 	dir.add(DirectoryObject(title = "TV", summary = "Se TV", art = R(ART), thumb = R(ICON), key = Callback(VideoMainMenu)))
 	dir.add(PrefsObject(title = "Indstillinger...", summary="Indstil DR NU plug-in", thumb = R(ICON), art = R(ART)))
 	return dir
@@ -103,104 +80,110 @@ def MusicMainMenu():
 
 
 def LiveRadioMenu():
+	x = HTTP.Request(DR_LIVE_RADIO_STREAMS).content
+	channels = JSON.ObjectFromString(str.rstrip(str.lstrip(x, "var netradioChannelVars = { channels: '"), "'};"))
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = "Live Radio", art = R(ART))
 	if Prefs['quality'] == 'low':
-		qIndex = 1
+		if 'high' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('high')
+		if 'medium' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('medium')
+		if 'auto' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('auto')
+		
+
 	elif Prefs['quality'] == 'medium':
-		qIndex = 1
-	else:
-		qIndex = 0
-	for channel in DR_LIVE_RADIO_STREAMS_ORDER:
-		if channel is not "P4":
-			vco = VideoClipObject(title = DR_LIVE_RADIO_STREAMS[channel][0], key = "http://www.dr.dk/#" + channel, summary = getRadioMetadata(channel), art = R(ART), thumb = R(ICON))
-			if Prefs['quality'] is "auto":
-				for links in DR_LIVE_RADIO_STREAMS[channel][2]:
-					for server in LIVE_RADIO_SERVERS:
-						vco.add(MediaObject(bitrate = links[1], parts = [PartObject(key=RTMPVideoURL(server, clip = links[0], height = None, width = None, live = True))]))
+		if 'high' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('high')
+		if 'auto' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('auto')
+	elif Prefs['quality'] == 'high':
+		if 'auto' in RADIO_QINDEX:
+			RADIO-QINDEX.pop('auto')
+ 	bP4Menu = False
+
+	for channel in channels:
+		if channel['source_url'] in DR_LIVE_RADIO_STREAMS_ORDER:
+			if not channel['redirect']:
+				vco = VideoClipObject(title = channel['title'], key = channel['mediaFile'][0], summary = "", art = R(ART), thumb = R(ICON))
+				for qindex in RADIO_QINDEX:
+					for server in channel['mediaFile']:
+						serverURL = server.rpartition('/')[0]
+						clipURL = server.rpartition('/')[2]
+						if qindex == 'medium':
+							clipURL = clipURL.replace('HQ',"MQ")
+						elif qindex == "low":
+							clipURL = clipURL.replace('HQ', 'LQ')
+						vco.add(MediaObject(bitrate = RADIO_QINDEX[qindex], parts = [PartObject(key = RTMPVideoURL(serverURL, clip = clipURL, height = None, width = None, live = True))]))
 				dir.add(vco)
-			else:
-				for server in LIVE_RADIO_SERVERS:
-					vco.add(MediaObject(bitrate = DR_LIVE_RADIO_STREAMS[channel][2][qIndex][1], parts = [PartObject(key = RTMPVideoURL(server, clip = DR_LIVE_RADIO_STREAMS[channel][2][qIndex][0], height = None, width = None, live = True))]))
-				dir.add(vco)	
-		else:
-			dir.add(DirectoryObject(title = "P4", summary = "Vælg din regionale P4", art = R(ART),thumb=R(ICON), key = Callback(LiveRadioP4Menu)))				
+		elif channel['source_url'] in DR_LIVE_RADIOP4_STREAM_ORDER and bP4Menu is False:
+					dir.add(DirectoryObject(title = "P4", summary = String.Encode("Vælg din regionale P4"), art = R(ART),thumb=R(ICON), key = Callback(LiveRadioP4Menu, channels = channels)))		
+					bP4Menu = True
 	return dir
 
-def LiveRadioP4Menu():
+def LiveRadioP4Menu(channels):
 	dir = ObjectContainer(view_group="List",title1 = "DR NU", title2 = "P4", art = R(ART))
 	if Prefs['quality'] == 'low':
-		qIndex = 1
+		if 'high' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('high')
+		if 'medium' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('medium')
+		if 'auto' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('auto')
+		
+
 	elif Prefs['quality'] == 'medium':
-		qIndex = 1
-	else:
-		qIndex = 0
-	for channel in DR_LIVE_RADIOP4_STREAM_ORDER:
-		vco = VideoClipObject(title = DR_LIVE_RADIO_STREAMS["P4"][0][channel][0], key = "http://www.dr.dk/" + channel, summary = getRadioMetadata(channel), art = R(ART), thumb = R(ICON))	
-		if Prefs['quality'] is "auto":
-			for links in DR_LIVE_RADIO_STREAMS["P4"][0][channel][2]:
-				for server in LIVE_RADIO_SERVERS:
-						vco.add(MediaObject(bitrate = links[1], parts = [PartObject(key=RTMPVideoURL(server, clip = links[0], height = None, width = None, live = True))]))
-		else:
-			for server in LIVE_RADIO_SERVERS:
-				vco.add(MediaObject(bitrate = DR_LIVE_RADIO_STREAMS["P4"][0][channel][2][qIndex][1], parts = [PartObject(key = RTMPVideoURL(server, clip = DR_LIVE_RADIO_STREAMS["P4"][0][channel][2][qIndex][0], height = None, width = None, live = True))]))
-		dir.add(vco)
+		if 'high' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('high')
+		if 'auto' in RADIO_QINDEX:
+			RADIO_QINDEX.pop('auto')
+	elif Prefs['quality'] == 'high':
+		if 'auto' in RADIO_QINDEX:
+			RADIO-QINDEX.pop('auto')
+	for channel in channels:
+		if channel['source_url'] in DR_LIVE_RADIOP4_STREAM_ORDER:
+			if not channel['redirect']:
+				vco = VideoClipObject(title = channel['title'], key = channel['mediaFile'][0] , summary = "", art = R(ART), thumb = R(ICON))	
+				for qindex in RADIO_QINDEX:
+					for server in channel['mediaFile']:
+						serverURL = server.rpartition('/')[0]
+						clipURL = server.rpartition('/')[2]
+						if qindex == 'medium':
+							clipURL = clipURL.replace('HQ','MQ')
+						elif qindex == 'low':
+							clipURL = clipURL.replace('HQ', 'LQ')
+						vco.add(MediaObject(bitrate = RADIO_QINDEX[qindex], parts = [PartObject(key = RTMPVideoURL(serverURL, clip = clipURL, height = None, width = None, live = True))]))
+				dir.add(vco) 
+
 	return dir
 
 def LiveTV():
 	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = "Live TV", art = R(ART) )
-	drRTMP = "rtmp://rtmplive.dr.dk/live"
-	for channelID in DR_LIVE_SORTORDER: 
-	
-		channelObj = MovieObject(url = "http://www.dr.dk/nu/live#%s" % channelID,
-								title = DR_TITLE_ICONS[channelID][0],
-								thumb = R(DR_TITLE_ICONS[channelID][1]),
-								art = R(ART),
-								summary = getTVLiveMetadata(channelID)
-								)
-		if Prefs['quality'] == "auto":
-			for channel in DR_LIVE_STREAMS[channelID]:
-				medObj = MediaObject(protocols = Protocol.RTMP,
-									bitrate = channel[1],
-									audio_channels = 2)
-				po = PartObject(key = RTMPVideoURL(drRTMP, clip = channel[0], live=True, height=467, width=830))
-				medObj.add(po)
-				channelObj.add(medObj)
-		else:
-			channel = DR_LIVE_STREAMS[channelID]
-			if Prefs['quality'] == "high":
-				singleBandwidth = 1000
-				clip1 = channel[0][0]
-				clip2 = channel[1][0]
-			if Prefs['quality'] == "medium":
-				singleBandwidth = 500
-				clip1 = channel[2][0]
-				clip2 = channel[3][0]
-			if Prefs['quality'] == "low":
-				clip1 = channel[4][0]
-				clip2 = channel[5][0]
-				singleBandwidth = 250
-			medObj1 = MediaObject(protocols = Protocol.RTMP,
-								bitrate = singleBandwidth,
-								audio_channels = 2,
-								
-								)
-			medObj2 = MediaObject(protocols = Protocol.RTMP,
-								bitrate = singleBandwidth,
-								audio_channels = 2
-								)
-			po1 = PartObject(key = RTMPVideoURL(drRTMP, clip = clip1, live = True, height = 467, width = 830))
-			po2 = PartObject(key = RTMPVideoURL(drRTMP, clip = clip2, live = True, height = 467, width = 830))
-			medObj1.add(po1)
-			medObj2.add(po2)
-			channelObj.add(medObj1)
-			channelObj.add(medObj2)
+	x = HTTP.Request("http://www.dr.dk/nu/embed/live").content
+	xr = str.rpartition(x, "'liveStreams':")[2]
+	xl = str.split(xr, "};")[0]
+	channels = JSON.ObjectFromString(xl)
+	for channel in channels:
+		channelObj = VideoClipObject(key = "http://www.dr.dk/nu/live/#" + channel['channelName'],
+									title = channel['channelName'],
+									thumb = R(DR_TITLE_ICONS[channel['channelName']][1])  )
+		for mediaFiles in channel['mediaFiles']:
+			bandwidth = mediaFiles['kbps']
+			if bandwidth <= THROTTLE[Prefs['quality']]:
+				for mediaFile in mediaFiles['mediaFile']:
+					medObj = MediaObject(bitrate = bandwidth) 
+					server = mediaFile.rpartition('/')[0]
+					clip = mediaFile.rpartition("/")[2]
+					po = PartObject(key = RTMPVideoURL(server, clip = clip, height = 467, width = 830, live = True))
+					medObj.add(po)
+					channelObj.add(medObj)
 		dir.add(channelObj)
-		#dir.add(LiveTVChannel(channel))
+			
 	return dir
 
 
 
-def ProgramSerierMenu(id,title):
+def ProgramSerierMenu(title):
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title )
 	JSONObject=JSON.ObjectFromURL(APIURL % "programseries.json")
 
@@ -241,10 +224,8 @@ def ProgramSerierMenu(id,title):
 									summary = serie['summary'], 
 									art = R(ART), 
 									thumb = thumb, 
-									#key = Callback(CreateVideoItem, 
-												#items = JSON.ObjectFromURL(APIURL % "programseries/"+serie['id'] + "/videos"),
-									#			title = serie['title'])))
 									key = Callback(ProgramMenu, id = serie['id'], title = serie['title'])))
+
 			
 	return dir
 
@@ -285,7 +266,7 @@ def CreateVideoItem(id, items, title):
 			art= APIURL % "programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
 		else:
 			art=thumb
-
+		Log.Debug(art)
 			
 		if 'spotTitle' in item:
 			title=item["spotTitle"]
@@ -300,7 +281,7 @@ def CreateVideoItem(id, items, title):
 			isPremiere = item['premiere']
 
 		if isPremiere:
-			title = title + " *PREMIERE* "
+			title = str(title) + " *PREMIERE* "
 			
 		if 'spotSubTitle' in item:
 			summary=item["spotSubTitle"]
@@ -347,12 +328,7 @@ def CreateVideoItem(id, items, title):
 		
 		## New video adding
 		
-		if Prefs['quality'] == "low":
-			throtle = 500
-		elif Prefs['quality'] == "medium":
-			throtle = 1000
-		else:
-			throtle = 20000
+		throtle = THROTTLE[Prefs['quality']]
 		
 		
 		vco = VideoClipObject(title = title, summary = summary, thumb = thumb, key = key)
@@ -362,7 +338,10 @@ def CreateVideoItem(id, items, title):
 				
 				if 'bitrateKbps' in video:
 					mo.bitrate = video['bitrateKbps']
-				if mo.bitrate < throtle:
+				else:
+					mo.bitrate = 250
+					
+				if mo.bitrate <= throtle:
 					if 'height' in video:
 						height = video['height']
 					else:
@@ -392,50 +371,54 @@ def CreateVideoItem(id, items, title):
 def getRadioMetadata(channelId):
 	
 	# This is a undocumented feature that might break the plugin.
-	JSONobj = JSON.ObjectFromURL(RADIO_NOWNEXT_URL % channelId, cacheTime = 60)
-	title_now = ""
-	description_now = ""
-	start_now = ""
-	stop_now = "" 
-	title_next = "" 
-	description_next = "" 
-	start_next = ""
-	stop_next = ""
-	trackop = ""
-	
-	if JSONobj['currentProgram']:
-		if JSONobj['currentProgram']['title']:
-			title_now = String.StripTags(JSONobj['currentProgram']['title']).replace("'","\'")
-		if JSONobj['currentProgram']['description']:
-			description_now = "\n" + String.StripTags(JSONobj['currentProgram']['description']).replace("'","\'")
-		if JSONobj['currentProgram']['start'] and JSONobj['currentProgram']['stop']:
-			start_now = "'\n" +JSONobj['currentProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['start'].split('T')[1].split(':')[1]
-			stop_now = "-"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[1]
-
-	if JSONobj['nextProgram']:
-		if JSONobj['nextProgram']['title']:
-			title_next = "\n\n" + String.StripTags(JSONobj['nextProgram']['title']).replace("'","\'")
-		if JSONobj['nextProgram']['description']:
-			description_next = "\n" + String.StripTags(JSONobj['nextProgram']['description']).replace("'","\'")
-		if JSONobj['nextProgram']['start'] and JSONobj['nextProgram']['stop']:
-			start_next = "\n" + JSONobj['nextProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['start'].split('T')[1].split(':')[1]
-			stop_next = "-" + JSONobj['nextProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['stop'].split('T')[1].split(':')[1]
-
-	try:
-		JSONobjTracks = JSON.ObjectFromURL(RADIO_TRACKS_URL % channelId, cacheTime=30, errors='Ingore')
-		if JSONobjTracks['tracks']:
-			pre1 = "\n\nSeneste Titel: "
-			for track in JSONobjTracks['tracks']:
-				if track['displayArtist']:
-					trackop = trackop + pre1 + track['displayArtist']
-				if track['title']:
-					trackop = trackop + "\n" + track['title'] + "\n\n"
-				pre1 = "Forrige: "
-	except:pass			
-					
-	strNowNext = title_now + description_now + start_now + stop_now + title_next + description_next + start_next + stop_next + trackop
-		
-	return strNowNext
+#	JSONobj = JSON.ObjectFromURL(RADIO_NOWNEXT_URL % channelId, cacheTime = 60)
+#	title_now = ""
+#	description_now = ""
+#	start_now = ""
+#	stop_now = "" 
+#	title_next = "" 
+#	description_next = "" 
+#	start_next = ""
+#	stop_next = ""
+#	trackop = ""
+#	strNowNext = "Fejl under hentning af data"	
+#	try:
+#		if JSONobj['currentProgram']:
+#			if JSONobj['currentProgram']['title']:
+#				title_now = String.StripTags(JSONobj['currentProgram']['title']).replace("'","\'")
+#			if JSONobj['currentProgram']['description']:
+#				description_now = "\n" + String.StripTags(JSONobj['currentProgram']['description']).replace("'","\'")
+#			if JSONobj['currentProgram']['start'] and JSONobj['currentProgram']['stop']:
+#				start_now = "'\n" +JSONobj['currentProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['start'].split('T')[1].split(':')[1]
+#				stop_now = "-"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['currentProgram']['stop'].split('T')[1].split(':')[1]
+#	
+#		if JSONobj['nextProgram']:
+#			if JSONobj['nextProgram']['title']:
+#				title_next = "\n\n" + String.StripTags(JSONobj['nextProgram']['title']).replace("'","\'")
+#			if JSONobj['nextProgram']['description']:
+#				description_next = "\n" + String.StripTags(JSONobj['nextProgram']['description']).replace("'","\'")
+#			if JSONobj['nextProgram']['start'] and JSONobj['nextProgram']['stop']:
+#				start_next = "\n" + JSONobj['nextProgram']['start'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['start'].split('T')[1].split(':')[1]
+#				stop_next = "-" + JSONobj['nextProgram']['stop'].split('T')[1].split(':')[0]+":"+JSONobj['nextProgram']['stop'].split('T')[1].split(':')[1]
+#	
+#		
+#			JSONobjTracks = JSON.ObjectFromURL(RADIO_TRACKS_URL % channelId, cacheTime=30, errors='Ingore')
+#			if JSONobjTracks['tracks']:
+#				pre1 = "\n\nSeneste Titel: "
+#				for track in JSONobjTracks['tracks']:
+#					if track['displayArtist']:
+#						trackop = trackop + pre1 + track['displayArtist']
+#					if track['title']:
+#						trackop = trackop + "\n" + track['title'] + "\n\n"
+#					pre1 = "Forrige: "
+#		strNowNext = title_now + description_now + start_now + stop_now + title_next + description_next + start_next + stop_next + trackop
+#	except:pass
+#		
+#					
+#	
+#		
+#	return strNowNext
+	return ""
 
 def getTVLiveMetadata(channelID):
 	# this is a undocumented feature that might break the plugin
@@ -464,7 +447,7 @@ def getTVLiveMetadata(channelID):
 			
 	return str(title)
 
-def ProgramSerierMenuRadio(id,title):
+def ProgramSerierMenuRadio(title):
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title )
 	JSONObject=JSON.ObjectFromURL(APIURL_RADIO % "programseries.json")
 
@@ -503,30 +486,30 @@ def ProgramSerierMenuRadio(id,title):
 									summary = serie['summary'], 
 									art = R(ART), 
 									thumb = thumb, 
-									key = Callback(CreateRadioItem, 
-												items = JSON.ObjectFromURL(APIURL_RADIO % "programseries/"+serie['id'] + "/videos"),
-												title = serie['title'])))
-			
+#									key = Callback(ProgramMenuRadio, 
+#												items = JSON.ObjectFromURL(APIURL_RADIO % "programseries/"+serie['id'] + "/videos"),
+#												title = serie['title'], id = serie['id'])))
+									key = Callback(ProgramMenu, id = serie['id'], title = serie['title'])))
 	return dir
 
 def LetterMenuRadio(title, serier):
 	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = title)
 	for serie in serier:
 		JSONobj = JSON.ObjectFromURL(APIURL_RADIO % "Programseries/" + serie['id'] + "/videos")
-		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL_RADIO % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateRadioItem, items = JSONobj, title = serie['title'])))
+		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL_RADIO % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateRadioItem, items = JSONobj, title = serie['title'], id = serie['id'])))
 	return dir
 
 def NewestMenuRadio(id, title):
-        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/newest.json"))
+        return CreateRadioItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/newest.json"))
 
 def MostViewedMenuRadio(id, title):
-        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/mostviewed.json"))
+        return CreateRadioItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/mostviewed.json"))
 
 def SpotMenuRadio(id, title):
         return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/spot.json"))
 
 def ProgramMenuRadio(id, title):
-	return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "programseries/" + id + "/videos"))
+	return CreateRadioItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "programseries/" + id + "/videos"))
 
 
 		
@@ -547,20 +530,20 @@ def CreateRadioItem(id, items, title):
 
 			
 		if 'spotTitle' in item:
-			title=item["spotTitle"]
+			title=str(item["spotTitle"])
 		elif 'name' in item:
-			title=item["name"]
+			title=str(item["name"])
 		else:
-			title=item["title"]
+			title=str(item["title"])
 
 		if 'isPremiere' in item:
-			isPremiere = item["isPremiere"]
+			isPremiere = str(item["isPremiere"])
 		elif 'premiere' in item:
-			isPremiere = item['premiere']
+			isPremiere = str(item['premiere'])
 
-		if isPremiere:
-			title = title + " *PREMIERE* "
-			
+#		if isPremiere:
+#			title = str(title) + str(" *PREMIERE* ")
+#			
 		if 'spotSubTitle' in item:
 			summary=item["spotSubTitle"]
 			subtitle=None
@@ -605,12 +588,8 @@ def CreateRadioItem(id, items, title):
 		
 		## New video adding
 		
-		if Prefs['quality'] == "low":
-			throtle = 500
-		elif Prefs['quality'] == "medium":
-			throtle = 1000
-		else:
-			throtle = 20000
+		throtle = RADIO_QINDEX[Prefs['quality']]
+		
 		
 		
 		vco = VideoClipObject(title = title, summary = summary, thumb = thumb, key = key)
