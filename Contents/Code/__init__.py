@@ -32,14 +32,6 @@ DR_LIVE_SORTORDER = ["DR1","DR2","DRU","RAM","DRK"]
 
 HTTP.CacheTime = 3600
 
-THROTTLE = {"low": 250,
-		"medium": 500,
-		"high": 1000,
-		"auto": 10000}
-RADIO_QINDEX = {"low": 64,
-			"medium": 128,
-			"high": 192,
-			"auto": 10000}
 
 ####################################################################################################
 
@@ -83,38 +75,19 @@ def LiveRadioMenu():
 	x = HTTP.Request(DR_LIVE_RADIO_STREAMS).content
 	channels = JSON.ObjectFromString(str.rstrip(str.lstrip(x, "var netradioChannelVars = { channels: '"), "'};"))
 	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = "Live Radio", art = R(ART))
-	if Prefs['quality'] == 'low':
-		if 'high' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('high')
-		if 'medium' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('medium')
-		if 'auto' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('auto')
-		
 
-	elif Prefs['quality'] == 'medium':
-		if 'high' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('high')
-		if 'auto' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('auto')
-	elif Prefs['quality'] == 'high':
-		if 'auto' in RADIO_QINDEX:
-			RADIO-QINDEX.pop('auto')
  	bP4Menu = False
 
 	for channel in channels:
 		if channel['source_url'] in DR_LIVE_RADIO_STREAMS_ORDER:
 			if not channel['redirect']:
 				vco = VideoClipObject(title = channel['title'], key = channel['mediaFile'][0], summary = "", art = R(ART), thumb = R(ICON))
-				for qindex in RADIO_QINDEX:
-					for server in channel['mediaFile']:
-						serverURL = server.rpartition('/')[0]
-						clipURL = server.rpartition('/')[2]
-						if qindex == 'medium':
-							clipURL = clipURL.replace('HQ',"MQ")
-						elif qindex == "low":
-							clipURL = clipURL.replace('HQ', 'LQ')
-						vco.add(MediaObject(bitrate = RADIO_QINDEX[qindex], parts = [PartObject(key = RTMPVideoURL(serverURL, clip = clipURL, height = None, width = None, live = True))]))
+				for server in channel['mediaFile']:
+					serverURL = server.rpartition('/')[0]
+					clipURL = server.rpartition('/')[2]
+					vco.add(MediaObject(parts = [PartObject(key = RTMPVideoURL(serverURL, clip = clipURL, height = None, width = None, live = True))]))
+					## could replace HQ to MQ or LQ for differentation
+					
 				dir.add(vco)
 		elif channel['source_url'] in DR_LIVE_RADIOP4_STREAM_ORDER and bP4Menu is False:
 					dir.add(DirectoryObject(title = "P4", summary = String.Encode("Vælg din regionale P4"), art = R(ART),thumb=R(ICON), key = Callback(LiveRadioP4Menu, channels = channels)))		
@@ -123,36 +96,16 @@ def LiveRadioMenu():
 
 def LiveRadioP4Menu(channels):
 	dir = ObjectContainer(view_group="List",title1 = "DR NU", title2 = "P4", art = R(ART))
-	if Prefs['quality'] == 'low':
-		if 'high' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('high')
-		if 'medium' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('medium')
-		if 'auto' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('auto')
-		
 
-	elif Prefs['quality'] == 'medium':
-		if 'high' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('high')
-		if 'auto' in RADIO_QINDEX:
-			RADIO_QINDEX.pop('auto')
-	elif Prefs['quality'] == 'high':
-		if 'auto' in RADIO_QINDEX:
-			RADIO-QINDEX.pop('auto')
 	for channel in channels:
 		if channel['source_url'] in DR_LIVE_RADIOP4_STREAM_ORDER:
 			if not channel['redirect']:
 				vco = VideoClipObject(title = channel['title'], key = channel['mediaFile'][0] , summary = "", art = R(ART), thumb = R(ICON))	
-				for qindex in RADIO_QINDEX:
-					for server in channel['mediaFile']:
-						serverURL = server.rpartition('/')[0]
-						clipURL = server.rpartition('/')[2]
-						if qindex == 'medium':
-							clipURL = clipURL.replace('HQ','MQ')
-						elif qindex == 'low':
-							clipURL = clipURL.replace('HQ', 'LQ')
-						vco.add(MediaObject(bitrate = RADIO_QINDEX[qindex], parts = [PartObject(key = RTMPVideoURL(serverURL, clip = clipURL, height = None, width = None, live = True))]))
+				
+				for server in channel['mediaFile']:
+					serverURL = server.rpartition('/')[0]
+					clipURL = server.rpartition('/')[2]
+					vco.add(MediaObject(parts = [PartObject(key = RTMPVideoURL(serverURL, clip = clipURL, height = None, width = None, live = True))]))
 				dir.add(vco) 
 
 	return dir
@@ -169,14 +122,13 @@ def LiveTV():
 									thumb = R(DR_TITLE_ICONS[channel['channelName']][1])  )
 		for mediaFiles in channel['mediaFiles']:
 			bandwidth = mediaFiles['kbps']
-			if bandwidth <= THROTTLE[Prefs['quality']]:
-				for mediaFile in mediaFiles['mediaFile']:
-					medObj = MediaObject(bitrate = bandwidth) 
-					server = mediaFile.rpartition('/')[0]
-					clip = mediaFile.rpartition("/")[2]
-					po = PartObject(key = RTMPVideoURL(server, clip = clip, height = 467, width = 830, live = True))
-					medObj.add(po)
-					channelObj.add(medObj)
+			for mediaFile in mediaFiles['mediaFile']:
+				medObj = MediaObject(bitrate = bandwidth) 
+				server = mediaFile.rpartition('/')[0]
+				clip = mediaFile.rpartition("/")[2]
+				po = PartObject(key = RTMPVideoURL(server, clip = clip, height = 467, width = 830, live = True))
+				medObj.add(po)
+				channelObj.add(medObj)
 		dir.add(channelObj)
 			
 	return dir
@@ -328,9 +280,6 @@ def CreateVideoItem(id, items, title):
 		
 		## New video adding
 		
-		throtle = THROTTLE[Prefs['quality']]
-		
-		
 		vco = VideoClipObject(title = title, summary = summary, thumb = thumb, key = key)
 		if len(content['links'])>0:
 			for video in content['links']:
@@ -341,28 +290,26 @@ def CreateVideoItem(id, items, title):
 				else:
 					mo.bitrate = 250
 					
-				if mo.bitrate <= throtle:
-					if 'height' in video:
-						height = video['height']
-					else:
-						height = None
+				if 'height' in video:
+					height = video['height']
+				else:
+					height = None
 						
-					if 'width' in video:
-						width = video['width']
-					else:
-						width = None 
+				if 'width' in video:
+					width = video['width']
+				else:
+					width = None 
 	
-					if video['fileType'] == "mp4":
-						baseUrl = "rtmp://vod.dr.dk/cms/"
-						clip = "mp4:" + video["uri"].split(":")[2]
-						po = PartObject(key = RTMPVideoURL(baseUrl, clip = clip, height = height, width = width, live = False))
-						#Log.Debug("Adding WM PO - key: " + po.key)
-					elif video['fileType'] == "wmv":
-						po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
-					else:
-						po = PartObject(key = video['uri'])
-					mo.add(po)
-					vco.add(mo)
+				if video['fileType'] == "mp4":
+					baseUrl = "rtmp://vod.dr.dk/cms/"
+					clip = "mp4:" + video["uri"].split(":")[2]
+					po = PartObject(key = RTMPVideoURL(baseUrl, clip = clip, height = height, width = width, live = False))
+				elif video['fileType'] == "wmv":
+					po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
+				else:
+					po = PartObject(key = video['uri'])
+				mo.add(po)
+				vco.add(mo)
 		else:
 			vco.add(MediaObject(parts = [PartObject(key = JSON.ObjectFromURL(key)["videoManifestUrl"])]))
 		dir.add(vco)
@@ -486,10 +433,7 @@ def ProgramSerierMenuRadio(title):
 									summary = serie['summary'], 
 									art = R(ART), 
 									thumb = thumb, 
-#									key = Callback(ProgramMenuRadio, 
-#												items = JSON.ObjectFromURL(APIURL_RADIO % "programseries/"+serie['id'] + "/videos"),
-#												title = serie['title'], id = serie['id'])))
-									key = Callback(ProgramMenu, id = serie['id'], title = serie['title'])))
+									key = Callback(ProgramMenuRadio, id = serie['id'], title = serie['title'])))
 	return dir
 
 def LetterMenuRadio(title, serier):
@@ -588,10 +532,6 @@ def CreateRadioItem(id, items, title):
 		
 		## New video adding
 		
-		throtle = RADIO_QINDEX[Prefs['quality']]
-		
-		
-		
 		vco = VideoClipObject(title = title, summary = summary, thumb = thumb, key = key)
 		if len(content['links'])>0:
 			for video in content['links']:
@@ -599,28 +539,24 @@ def CreateRadioItem(id, items, title):
 				
 				if 'bitrateKbps' in video:
 					mo.bitrate = video['bitrateKbps']
-				if mo.bitrate < throtle:
-					if 'height' in video:
-						height = video['height']
-					else:
-						height = None
+
+				if 'height' in video:
+					height = video['height']
+				else:
+					height = None
 						
-					if 'width' in video:
-						width = video['width']
-					else:
-						width = None 
-	
-#					if video['fileType'] == "mp4":
-#						baseUrl = "rtmp://vod.dr.dk/cms/"
-#						clip = "mp4:" + video["uri"].split(":")[2]
-#						po = PartObject(key = RTMPVideoURL(baseUrl, clip = clip, height = height, width = width, live = False))
-						#Log.Debug("Adding WM PO - key: " + po.key)
-					if video['fileType'] == "wma":
-						po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
-					else:
-						po = PartObject(key = video['uri'])
-					mo.add(po)
-					vco.add(mo)
+				if 'width' in video:
+					width = video['width']
+				else:
+					width = None 
+
+				if video['fileType'] == "wma":
+					po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
+				else:
+					po = PartObject(key = video['uri'])
+
+				mo.add(po)
+				vco.add(mo)
 		else:
 			vco.add(MediaObject(parts = [PartObject(key = JSON.ObjectFromURL(key)["videoManifestUrl"])]))
 		dir.add(vco)

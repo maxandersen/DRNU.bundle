@@ -4,12 +4,5 @@
     "type":"bool",
     "label":"Group Programs per first letter",
     "default": "false"
-  },
-  {
-    "id":"quality",
-    "type":"enum",
-    "label":"Quality",
-    "default": "high",
-    "values": [ "high", "medium", "low", "auto" ]
   }
 ]
