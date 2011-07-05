@@ -301,8 +301,9 @@ def CreateVideoItem(id, items, title):
 					width = None 
 	
 				if video['fileType'] == "mp4":
-					baseUrl = "rtmp://vod.dr.dk/cms/"
-					clip = "mp4:" + video["uri"].split(":")[2]
+					baseClip = video['uri'].rpartition(':')
+					clip = "mp4:" + baseClip[2]
+					baseUrl = baseClip[0].rpartition('/')[0]+"/"
 					po = PartObject(key = RTMPVideoURL(baseUrl, clip = clip, height = height, width = width, live = False))
 				elif video['fileType'] == "wmv":
 					po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
@@ -450,7 +451,7 @@ def MostViewedMenuRadio(id, title):
         return CreateRadioItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/mostviewed.json"))
 
 def SpotMenuRadio(id, title):
-        return CreateVideoItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/spot.json"))
+        return CreateRadioItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "videos/spot.json"))
 
 def ProgramMenuRadio(id, title):
 	return CreateRadioItem(id=id, title=title, items=JSON.ObjectFromURL(APIURL_RADIO % "programseries/" + id + "/videos"))
@@ -550,7 +551,12 @@ def CreateRadioItem(id, items, title):
 				else:
 					width = None 
 
-				if video['fileType'] == "wma":
+				if video['fileType'] == "mp4":
+					baseClip = video['uri'].rpartition(':')
+					clip = "mp4:" + baseClip[2]
+					baseUrl = baseClip[0].rpartition('/')[0]+"/"
+					po = PartObject(key = RTMPVideoURL(baseUrl, clip = clip, height = height, width = width, live = False))
+				elif video['fileType'] == "wma":
 					po = PartObject(key = WindowsMediaVideoURL(video['uri'], height = height, width = width))
 				else:
 					po = PartObject(key = video['uri'])
