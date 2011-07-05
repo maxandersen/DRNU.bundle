@@ -175,7 +175,7 @@ def ProgramSerierMenu(title):
 									tagline = serie['subtitle'], 
 									summary = serie['summary'], 
 									art = R(ART), 
-									thumb = thumb, 
+									thumb = APIURL % "programseries/" + serie['id'] + "/images/512x512.jpg", 
 									key = Callback(ProgramMenu, id = serie['id'], title = serie['title'])))
 
 			
