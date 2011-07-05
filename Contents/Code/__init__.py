@@ -155,7 +155,7 @@ def ProgramSerierMenu(title):
 		letter = title[0].upper()
 		if letter not in bucket:
 			bucket[letter] = list()
-		tuple = dict(title=title,subtitle=subtitle,thumb=thumb,summary=summary,id=slug)
+		tuple = dict(title=title,subtitle=subtitle,thumb=thumb,art=thumb,summary=summary,id=slug)
 		bucket[letter].append(tuple)
 
 	for firstChar in sorted(bucket.iterkeys()):
@@ -266,6 +266,11 @@ def CreateVideoItem(id, items, title):
 		if "name" in content:  ## this is the case for some entries in TV AVISEN
 			title = content["name"]
 
+	#	if 'broadcastTime' in item:
+	#		originally_available_at = item['broadcastTime'].replace(
+	#	else:
+	#		originally_available_at = Null
+
 		## hack to get repeated shows to show up with dates
 		if title.upper() in titles:
 			if 'formattedBroadcastTime' in item:
@@ -280,7 +285,7 @@ def CreateVideoItem(id, items, title):
 		
 		## New video adding
 		
-		vco = VideoClipObject(title = title, summary = summary, thumb = thumb, key = key)
+		vco = VideoClipObject(title = title, art = art, summary = summary, thumb = thumb, key = key)
 		if len(content['links'])>0:
 			for video in content['links']:
 				mo = MediaObject()
