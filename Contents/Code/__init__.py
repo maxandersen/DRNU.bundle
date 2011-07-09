@@ -136,7 +136,7 @@ def LiveTV():
 
 
 def ProgramSerierMenu(title):
-	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title )
+	dir = ObjectContainer(view_group = "InfoList", title1 = "DR NU", title2 = title )
 	JSONObject=JSON.ObjectFromURL(APIURL % "programseries.json")
 
 	bucket = dict()
@@ -182,7 +182,7 @@ def ProgramSerierMenu(title):
 	return dir
 
 def LetterMenu(title, serier):
-	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = title)
+	dir = ObjectContainer(view_group="InfoList", title1 = "DR NU", title2 = title)
 	for serie in serier:
 		JSONobj = JSON.ObjectFromURL(APIURL % "Programseries/" + serie['id'] + "/videos")
 		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateVideoItem, items = JSONobj, title = serie['title'], id = serie['id'])))
@@ -205,7 +205,7 @@ def ProgramMenu(id, title):
 
 		
 def CreateVideoItem(id, items, title):
-	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title)
+	dir = ObjectContainer(view_group = "InfoList", title1 = "DR NU", title2 = title)
 
 	titles = set()
 	for item in items:
@@ -401,7 +401,7 @@ def getTVLiveMetadata(channelID):
 	return str(title)
 
 def ProgramSerierMenuRadio(title):
-	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title )
+	dir = ObjectContainer(view_group = "InfoList", title1 = "DR NU", title2 = title )
 	JSONObject=JSON.ObjectFromURL(APIURL_RADIO % "programseries.json")
 
 	bucket = dict()
@@ -443,7 +443,7 @@ def ProgramSerierMenuRadio(title):
 	return dir
 
 def LetterMenuRadio(title, serier):
-	dir = ObjectContainer(view_group="List", title1 = "DR NU", title2 = title)
+	dir = ObjectContainer(view_group="InfoList", title1 = "DR NU", title2 = title)
 	for serie in serier:
 		JSONobj = JSON.ObjectFromURL(APIURL_RADIO % "Programseries/" + serie['id'] + "/videos")
 		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL_RADIO % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateRadioItem, items = JSONobj, title = serie['title'], id = serie['id'])))
@@ -464,7 +464,7 @@ def ProgramMenuRadio(id, title):
 
 		
 def CreateRadioItem(id, items, title):
-	dir = ObjectContainer(view_group = "List", title1 = "DR NU", title2 = title)
+	dir = ObjectContainer(view_group = "InfoList", title1 = "DR NU", title2 = title)
 
 	titles = set()
 	for item in items:
