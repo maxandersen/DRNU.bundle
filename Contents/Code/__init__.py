@@ -215,7 +215,7 @@ def CreateVideoItem(id, items, title):
 		if 'imagePath' in item:
 			art="http://dr.dk/nu" + item["imagePath"]
 		elif 'programSerieSlug' in item:
-			art= APIURL % "programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
+			art= APIURL % "programseries/" + item['programSerieSlug'] + "/images/512x512.jpg"
 		else:
 			art=thumb
 		Log.Debug(art)
@@ -474,7 +474,7 @@ def CreateRadioItem(id, items, title):
 		if 'imagePath' in item:
 			art="http://dr.dk/nu" + item["imagePath"]
 		elif 'programSerieSlug' in item:
-			art= APIURL_RADIO % "programseries/" + item['programSerieSlug'] + "/images/1024x768.jpg"
+			art= APIURL_RADIO % "programseries/" + item['programSerieSlug'] + "/images/512x512.jpg"
 		else:
 			art=thumb
 
