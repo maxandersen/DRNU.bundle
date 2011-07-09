@@ -147,9 +147,8 @@ def ProgramSerierMenu(title):
 		if program["videoCount"] > 1:
 			title = title + " (" + str(program["videoCount"]) + " afs.)"
 		subtitle=", ".join(program["labels"])
-		
-		summary=program["description"]
 		thumb=APIURL % "programseries/" + slug + "/images/512x512.jpg"
+		summary=program["description"]
 		Log.Debug(thumb)
 
 		letter = title[0].upper()
@@ -171,11 +170,12 @@ def ProgramSerierMenu(title):
 		
 		else:
 			for serie in serier:
+			
 				dir.add(DirectoryObject(title = serie['title'], 
 									tagline = serie['subtitle'], 
 									summary = serie['summary'], 
-									art = R(ART), 
-									thumb = APIURL % "programseries/" + serie['id'] + "/images/512x512.jpg", 
+									art = serie['thumb'], 
+									thumb = serie['thumb'], 
 									key = Callback(ProgramMenu, id = serie['id'], title = serie['title'])))
 
 			
@@ -185,7 +185,7 @@ def LetterMenu(title, serier):
 	dir = ObjectContainer(view_group="InfoList", title1 = "DR NU", title2 = title)
 	for serie in serier:
 		JSONobj = JSON.ObjectFromURL(APIURL % "Programseries/" + serie['id'] + "/videos")
-		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = R(ART), thumb = APIURL % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateVideoItem, items = JSONobj, title = serie['title'], id = serie['id'])))
+		dir.add(DirectoryObject(title = serie['title'], summary = serie['summary'], art = art, thumb = APIURL % "programseries/"+serie['id']+"/images/512x512.jpg", key = Callback(CreateVideoItem, items = JSONobj, title = serie['title'], id = serie['id'])))
 	return dir
 
 def NewestMenu(id, title):
